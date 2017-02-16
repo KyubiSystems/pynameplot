@@ -2,3 +2,5 @@ virtualenv*
 venv.geo
 *~
 *.pyc
+PML*
+*NAME_output

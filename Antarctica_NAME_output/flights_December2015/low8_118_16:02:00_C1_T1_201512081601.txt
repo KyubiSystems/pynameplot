@@ -1,0 +1,68 @@
+ NAME III (version 6.5)                                          
+ Run name:                   Flight8_0118
+ Run time:                   02/08/2016 12:08:57.461 UTC+01:00
+ Met data:                   NWP Flow.Global_Mk9_PT1 Flow; NWP Flow.Global_Mk9_PT2 Flow; NWP Flow.Global_Mk9_PT3 Flow; NWP Flow.Global_Mk9_PT4 Flow; NWP Flow.Global_Mk9_PT5 Flow; NWP Flow.Global_Mk9_PT6 Flow; NWP Flow.Global_Mk9_PT7 Flow; NWP Flow.Global_Mk9_PT8 Flow; NWP Flow.Global_Mk9_PT9 Flow; NWP Flow.Global_Mk9_PT10 Flow; NWP Flow.Global_Mk9_PT11 Flow; NWP Flow.Global_Mk9_PT12 Flow; NWP Flow.Global_Mk9_PT13 Flow; NWP Flow.Global_Mk9_PT14 Flow
+ Start of release:           08/12/2015 16:02 UTC
+ End of release:             08/12/2015 16:01 UTC
+ Source strength:            Multiple Sources
+ Release location:           Multiple Sources
+ Release height:             Multiple Sources
+ Run duration:               5day 0hr 1min
+ X grid origin:                -203.8750    
+ Y grid origin:                -89.87500    
+ X grid size:                        1432
+ Y grid size:                         200
+ X grid resolution:            0.2500000    
+ Y grid resolution:            0.2500000    
+ Number of preliminary cols:            4
+ Number of field cols:                  1
+ 
+ Fields:
+                        ,                        ,                        ,                        ,                     INERT,
+                        ,                        ,                        ,                        ,                     Req 1,
+                        ,                        ,                        ,                        ,         Air Concentration,
+                        ,                        ,                        ,                        ,                   TRACER1,
+                        ,                        ,                        ,                        ,                 g s / m^3,
+                        ,                        ,                        ,                        ,                       low,
+                        ,                        ,                        ,                        ,     No ensemble averaging,
+                        ,                        ,                        ,                        ,    5day 0hr 0min integral,
+                        ,                        ,                        ,                        ,   No horizontal averaging,
+                        ,                        ,                        ,                        ,     No vertical averaging,
+                        ,                        ,                        ,                        ,                          ,
+                        ,                        ,                        ,                        ,                          ,
+                        ,                        ,                        ,                        ,                          ,
+                        ,                        ,                        ,                        ,      03/12/2015 16:01 UTC,
+                        ,                        ,                        ,                        ,        Z = 100.0000 m agl,
+                        ,                        ,                        ,                        ,                          ,
+                 X Index,                 Y Index,            X (Lat-Long),            Y (Lat-Long),                          ,
+                     658,                     104,               -39.62500,               -64.12500,             3.2022093E-10,
+                    1038,                      81,                55.37500,               -69.87500,             4.0616577E-10,
+                    1044,                      80,                56.87500,               -70.12500,             4.1106193E-10,
+                    1047,                      78,                57.62500,               -70.62500,             8.4246871E-10,
+                    1049,                      77,                58.12500,               -70.87500,             4.2655623E-10,
+                    1050,                      76,                58.37500,               -71.12500,             4.3197781E-10,
+                    1086,                      52,                67.37500,               -77.12500,             6.2715166E-10,
+                    1091,                      53,                68.62500,               -76.87500,             6.1541827E-10,
+                    1095,                      63,                69.62500,               -74.37500,             5.1884658E-10,
+                    1100,                      64,                70.87500,               -74.12500,             5.1089183E-10,
+                    1104,                      63,                71.87500,               -74.37500,             5.1884658E-10,
+                    1106,                      67,                72.37500,               -73.37500,             4.8845006E-10,
+                    1109,                      67,                73.12500,               -73.37500,             4.8845006E-10,
+                    1111,                      68,                73.62500,               -73.12500,             4.8139376E-10,
+                    1115,                      76,                74.62500,               -71.12500,             4.3197781E-10,
+                    1128,                      75,                77.87500,               -71.37500,             4.3755768E-10,
+                    1160,                      85,                85.87500,               -68.87500,             3.8775341E-10,
+                    1161,                      86,                86.12500,               -68.62500,             3.8343698E-10,
+                    1167,                      86,                87.62500,               -68.62500,             3.8343698E-10,
+                    1178,                      86,                90.37500,               -68.62500,             3.8343698E-10,
+                    1279,                      33,                115.6250,               -81.87500,             9.8879749E-10,
+                    1304,                      28,                121.8750,               -83.12500,             1.1674196E-09,
+                    1309,                      26,                123.1250,               -83.62500,             1.2586243E-09,
+                    1310,                      25,                123.3750,               -83.87500,             1.3097040E-09,
+                    1311,                      24,                123.6250,               -84.12500,             1.3652873E-09,
+                    1311,                      25,                123.6250,               -83.87500,             1.3097040E-09,
+                    1321,                      30,                126.1250,               -82.62500,             1.0886558E-09,
+                    1322,                      29,                126.3750,               -82.87500,             1.1266629E-09,
+                    1326,                      28,                127.3750,               -83.12500,             1.1674196E-09,
+                    1328,                      28,                127.8750,               -83.12500,             1.1674196E-09,
+                    1331,                      26,                128.6250,               -83.62500,             1.2586243E-09,
