@@ -15,10 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
 import geopandas as gpd
 
-filename = "kmz_old/doc.kml"
+filename = "PML_shapefiles/North_sea.shp"
 
-kmz = gpd.read_file(filename)
+shp = gpd.read_file(filename)
 
+shp.plot()
 
+plt.savefig('foo.png')
