@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 
 
-shapefile = "PML_shapefiles/North_sea.shp"
+shapefile = "PML_shapefiles/UK.shp"
 base = os.path.basename(shapefile)
 region = os.path.splitext(base)[0]
 
