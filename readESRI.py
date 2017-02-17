@@ -25,6 +25,12 @@ filename = "PML_shapefiles/North_sea.shp"
 
 shp = gpd.read_file(filename)
 
-shp.plot()
+fig, ax = plt.subplots()
 
-plt.savefig('foo.png')
+ax.set_aspect('equal')
+
+shp.plot(ax=ax, color='blue')
+
+ax.set_title('this is the figure title', fontsize=20)
+
+fig.savefig('foo2.png', dpi=300)
