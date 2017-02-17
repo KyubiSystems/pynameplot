@@ -15,15 +15,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import geopandas as gpd
 
-filename = "PML_shapefiles/North_sea.shp"
 
-shp = gpd.read_file(filename)
+shapefile = "PML_shapefiles/North_sea.shp"
+base = os.path.basename(shapefile)
+region = os.path.splitext(base)[0]
+
+print region
+
+shp = gpd.read_file(shapefile)
 
 fig, ax = plt.subplots()
 
@@ -31,6 +37,7 @@ ax.set_aspect('equal')
 
 shp.plot(ax=ax, color='blue')
 
-ax.set_title('this is the figure title', fontsize=20)
+ax.set_title(region, fontsize=20)
 
-fig.savefig('foo2.png', dpi=300)
+pngfile = region + '.png'
+fig.savefig(pngfile, dpi=300)
