@@ -1,0 +1,4 @@
+To set up development environment, run
+
+source ./setup.sh
+
