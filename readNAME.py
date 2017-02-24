@@ -16,6 +16,8 @@
 # limitations under the License.
 
 import pandas as pd
+from geopandas import GeoDataFrame
+from shapely.geometry import Point
 
 filename = '1daysurfaceWARRI_20110715.txt'
 
@@ -35,5 +37,17 @@ df.columns = collist[1::]
 # Drop leading rows
 df = df.drop([0,1,2,3])
 
-print df
+# Convert strings to floats where possible
+df = df.apply(lambda x: pd.to_numeric(x, errors='ignore'))
 
+# Clear bad (empty) data columns from DataFrame
+df = df.dropna(axis=1, how='all')
+
+# Set mapping coordinate
+crs = {'init': 'epsg:4326'}
+
+# Generate Shapely Point objects for each grid point
+geometry = [Point(xy) for xy in zip(df.Longitude, df.Latitude)]
+geo_df = GeoDataFrame(df, crs=crs, geometry=geometry)
+
+print geo_df
