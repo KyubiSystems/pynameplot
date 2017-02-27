@@ -63,3 +63,8 @@ geo_df = GeoDataFrame(df, crs=crs, geometry=df['points'])
 
 print geo_df
 
+print df['Longitude'].max()
+print df['Longitude'].min()
+
+print df['Latitude'].max()
+print df['Latitude'].min()
