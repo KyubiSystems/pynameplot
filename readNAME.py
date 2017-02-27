@@ -17,9 +17,15 @@
 
 import pandas as pd
 from geopandas import GeoDataFrame
-from shapely.geometry import Point
+from shapely.geometry import Point, Polygon
+from grid import gridsquare
 
 filename = '1daysurfaceWARRI_20110715.txt'
+
+# declare grid spacing (replace with read from NAME header)
+delta_lon = 0.25
+delta_lat = 0.25
+grid_size = (delta_lon, delta_lat)
 
 # read CSV portion of NAME file into pandas DataFrame
 df = pd.read_csv(filename, header=31)
@@ -43,11 +49,17 @@ df = df.apply(lambda x: pd.to_numeric(x, errors='ignore'))
 # Clear bad (empty) data columns from DataFrame
 df = df.dropna(axis=1, how='all')
 
-# Set mapping coordinate
+# Set mapping coordinate for GeoDataFrame
 crs = {'init': 'epsg:4326'}
 
 # Generate Shapely Point objects for each grid point
-geometry = [Point(xy) for xy in zip(df.Longitude, df.Latitude)]
-geo_df = GeoDataFrame(df, crs=crs, geometry=geometry)
+df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
+
+# Generate Shapely Polygons for grid squares
+df['grid'] = [ Polygon(gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
+
+# Create GeoDataFrame with point and grid geometry columns
+geo_df = GeoDataFrame(df, crs=crs, geometry=df['points'])
 
 print geo_df
+
