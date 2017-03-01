@@ -31,7 +31,7 @@ def loadheader(filename):
                 key = key.strip()
                 val = val.strip()
             
-                print 'setting ' + key
+                #print 'setting ' + key
                 header[key] = val
 
     return header

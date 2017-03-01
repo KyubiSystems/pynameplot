@@ -19,12 +19,18 @@ import pandas as pd
 from geopandas import GeoDataFrame
 from shapely.geometry import Point, Polygon
 from grid import gridsquare
+from header import loadheader
 
 filename = '1daysurfaceWARRI_20110715.txt'
 
-# declare grid spacing (replace with read from NAME header)
-delta_lon = 0.25
-delta_lat = 0.25
+print 'Loading ' + filename + '...',
+
+# read and parse NAME file header
+header = loadheader(filename)
+
+# get grid size from header
+delta_lon = float(header['X grid resolution'])
+delta_lat = float(header['Y grid resolution'])
 grid_size = (delta_lon, delta_lat)
 
 # read CSV portion of NAME file into pandas DataFrame
@@ -42,7 +48,7 @@ collist[1:4] = ['X-Index', 'Y-Index', 'Longitude', 'Latitude']
 collist = [ x.strip() for x in collist ]
 
 # Get observation timestamp strings
-timestamps = collist[4::]
+timestamps = collist[5::]
 
 # Apply labels to DataFrame
 df.columns = collist[1::]
@@ -65,10 +71,16 @@ df['grid'] = [ Polygon(gridsquare(xy + grid_size)) for xy in zip(df.Longitude, d
 # Create GeoDataFrame with point and grid geometry columns
 geo_df = GeoDataFrame(df, crs=crs, geometry=df['points'])
 
-print geo_df['14/07/2011 15:00 UTC']
+print 'done'
 
-print df['Longitude'].max()
-print df['Longitude'].min()
+print geo_df[timestamps]
+#print geo_df['14/07/2011 15:00 UTC']
 
-print df['Latitude'].max()
-print df['Latitude'].min()
+#print df['Longitude'].max()
+#print df['Longitude'].min()
+
+#print df['Latitude'].max()
+#print df['Latitude'].min()
+
+print geo_df[timestamps].values.min()
+print geo_df[timestamps].values.max()
