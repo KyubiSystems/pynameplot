@@ -30,12 +30,19 @@ grid_size = (delta_lon, delta_lat)
 # read CSV portion of NAME file into pandas DataFrame
 df = pd.read_csv(filename, header=31)
 
+# Clear bad (empty) data columns from DataFrame
+df = df.dropna(axis=1, how='all')
+
 # Get column header timestamp names from first row
 c = map(list, df[0:1].values)
 collist = c[0]
 
 # Set leader column names
 collist[1:4] = ['X-Index', 'Y-Index', 'Longitude', 'Latitude']
+collist = [ x.strip() for x in collist ]
+
+# Get observation timestamp strings
+timestamps = collist[4::]
 
 # Apply labels to DataFrame
 df.columns = collist[1::]
@@ -45,9 +52,6 @@ df = df.drop([0,1,2,3])
 
 # Convert strings to floats where possible
 df = df.apply(lambda x: pd.to_numeric(x, errors='ignore'))
-
-# Clear bad (empty) data columns from DataFrame
-df = df.dropna(axis=1, how='all')
 
 # Set mapping coordinate for GeoDataFrame
 crs = {'init': 'epsg:4326'}
@@ -61,7 +65,7 @@ df['grid'] = [ Polygon(gridsquare(xy + grid_size)) for xy in zip(df.Longitude, d
 # Create GeoDataFrame with point and grid geometry columns
 geo_df = GeoDataFrame(df, crs=crs, geometry=df['points'])
 
-print geo_df
+print geo_df['14/07/2011 15:00 UTC']
 
 print df['Longitude'].max()
 print df['Longitude'].min()

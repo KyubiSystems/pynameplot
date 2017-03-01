@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Author: Duncan Law-Green (dlg@kyubi.co.uk)
 # Copyright 2017 Kyubi Systems
 # 
@@ -13,11 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Generate list of coordinates for gridsquare
-# input 4-tuple of grid TLC, dlongitude, dlatitude
-# return list of 4 coords for grid corners
+# Load NAME file and parse header lines into dict
 
-def gridsquare(coords):
-    (lon, lat, dlon, dlat) = coords
-    gs = [(lon, lat), (lon - dlon, lat), (lon-dlon, lat-dlat), (lon, lat-dlat)]
-    return gs
+def loadheader(filename):
+    
+    header = {}
+    
+    with open(filename, 'r') as f:
+        
+        for line in range(1,19):
+            h = f.readline()
+            
+            if ":" in h:
+                (key, val) = h.split(":",1)
+                key = key.strip()
+                val = val.strip()
+            
+                print 'setting ' + key
+                header[key] = val
+
+    return header
