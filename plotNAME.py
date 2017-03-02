@@ -24,6 +24,7 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from matplotlib.collections import PatchCollection
 from shapely.ops import transform
 from shapely.geometry import Point, Polygon
@@ -108,16 +109,30 @@ print 'done'
 #print df['Latitude'].max()
 #print df['Latitude'].min()
 
-print "Min concentration: ", geo_df[timestamps].values.min()
-print "Max concentration: ", geo_df[timestamps].values.max()
+# Get minimum non-zero concentration value
+cl = geo_df[timestamps].values.tolist()
+flat = [ item for sublist in cl for item in sublist ]
+min_conc = min([ x for x in flat if x > 0.0 ])
+
+# Get maximum concentration value
+max_conc = geo_df[timestamps].values.max()
+
+print "Min concentration: ", min_conc
+print "Max concentration: ", max_conc
 
 # ---------------------------------------
 # begin plotting
+
+print "Plotting figure...",
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
 
 ax.set_aspect('equal')
+
+# set colourmap
+norm = matplotlib.colors.LogNorm(vmin=min_conc, vmax=max_conc, clip=False)
+mapper = cm.ScalarMappable(norm=norm, cmap=cm.Greys_r)
 
 m = Basemap(llcrnrlon=lon_bounds[0], llcrnrlat=lat_bounds[0],
                         urcrnrlon=lon_bounds[1], urcrnrlat=lat_bounds[1],
@@ -147,3 +162,10 @@ sq = ax.add_collection(pc)
 
 pngfile = 'plot_test3a.png'
 fig.savefig(pngfile, dpi=300)
+
+print "done"
+
+# try combined loop on polygon and concentration
+ts = '14/07/2011 15:00 UTC'
+for (x,y) in zip(geo_df['grid'], geo_df[ts]):
+    print x, y

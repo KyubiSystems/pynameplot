@@ -82,5 +82,13 @@ print geo_df[timestamps]
 #print df['Latitude'].max()
 #print df['Latitude'].min()
 
-print geo_df[timestamps].values.min()
-print geo_df[timestamps].values.max()
+# Get minimum non-zero concentration value
+cl = geo_df[timestamps].values.tolist()
+flat = [ item for sublist in cl for item in sublist ]
+min_conc = min([ x for x in flat if x > 0.0 ])
+
+# Get maximum concentration value
+max_conc = geo_df[timestamps].values.max()
+
+print 'Minimum concentration: ', min_conc
+print 'Maximum concentration: ', max_conc
