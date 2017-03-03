@@ -16,6 +16,7 @@
 # limitations under the License.
 
 # data frame libraries
+import numpy as np
 import pandas as pd
 from geopandas import GeoDataFrame
 
@@ -125,14 +126,16 @@ print "Max concentration: ", max_conc
 
 print "Plotting figure...",
 
+# set timestamp
+ts = '14/07/2011 15:00 UTC'
+
 fig = plt.figure()
 ax = fig.add_subplot(111)
 
 ax.set_aspect('equal')
 
-# set colourmap
+# set normalisation
 norm = matplotlib.colors.LogNorm(vmin=min_conc, vmax=max_conc, clip=False)
-mapper = cm.ScalarMappable(norm=norm, cmap=cm.Greys_r)
 
 m = Basemap(llcrnrlon=lon_bounds[0], llcrnrlat=lat_bounds[0],
                         urcrnrlon=lon_bounds[1], urcrnrlat=lat_bounds[1],
@@ -154,18 +157,23 @@ for poly in geo_df['grid']:
     mpoly = transform(m, poly)
     patches.append(PolygonPatch(mpoly))
 
-pc = PatchCollection(patches, match_original=True)
+
+pc = PatchCollection(patches, cmap=cm.hot, norm=norm, match_original=True)
 pc.set_edgecolor('none')
 pc.set_zorder(4)
+pc.set(array=geo_df[ts])
 
 sq = ax.add_collection(pc)
 
-pngfile = 'plot_test3a.png'
+fig.text(0.4, 0.15, ts, color='white', transform=ax.transAxes)
+
+fig.colorbar(pc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
+
+pngfile = 'plot_test4a.png'
 fig.savefig(pngfile, dpi=300)
 
 print "done"
 
-# try combined loop on polygon and concentration
-ts = '14/07/2011 15:00 UTC'
-for (x,y) in zip(geo_df['grid'], geo_df[ts]):
-    print x, y
+
+
+
