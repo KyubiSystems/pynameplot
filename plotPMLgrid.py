@@ -218,7 +218,7 @@ gsq = ax.add_collection(gpc)
 
 fig.text(0.4, 0.15, ts, color='white', transform=ax.transAxes)
 
-fig.colorbar(pc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
+fig.colorbar(gpc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
 
 # ------------------------------------
 
