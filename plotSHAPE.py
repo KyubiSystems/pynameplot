@@ -34,9 +34,27 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # ------------------------------------
-# input shapefile name
-shapefile = "PML_shapefiles/UK_coast.shp"
+# input shapefile name/colour list
 
+shapelist = "europe_shapes.list"
+files = []
+colors = []
+
+with open(shapelist, 'r') as f:
+
+    for line in f:
+        if "," in line:
+            (filename, colorname) = line.split(",",1)
+            filename = filename.strip()
+            colorname = colorname.strip()
+
+            files.append(filename)
+            colors.append(colorname)
+
+#print files
+#print colors
+
+# ------------------------------------
 # Map bounds
 
 lon_bounds = [-20., 20. ]
@@ -46,9 +64,6 @@ lon_axis = [ -20., -10., 0., 10 ]
 lat_axis = [ 45., 50., 55., 60. ]
 
 # ------------------------------------
-# read ESRI shapefile into GeoPandas object
-shape = gpd.GeoDataFrame.from_file(shapefile)
-
 # initialise plot
 fig, ax = plt.subplots()
 
@@ -63,33 +78,43 @@ m.drawcoastlines(color='white')
 m.drawcountries(color='white')
 m.drawmapboundary(fill_color='#444444')
 m.fillcontinents(color='#bbbbbb',lake_color='#444444')
-m.drawparallels(lat_axis, linewidth=0.5, color='white')
-m.drawmeridians(lon_axis, linewidth=0.5, color='white')
+m.drawparallels(lat_axis, linewidth=0.5, color='white', labels=[1,0,0,1])
+m.drawmeridians(lon_axis, linewidth=0.5, color='white', labels=[1,0,0,1])
 
 ax.set_title('Testing ESRI plot...')
 
+
+# Loop over input shapefiles
+
 patches = []
 
-for poly in shape.geometry:
-    if poly.geom_type == 'Polygon':
-        print 'polygon found', poly
-        mpoly = transform(m, poly)
-        patches.append(PolygonPatch(mpoly))
-    elif poly.geom_type == 'MultiPolygon':
-        for subpoly in poly:
-            print 'subpolygon found', subpoly
-            mpoly = transform(m, subpoly)
+for shapefile in files:
+
+    # read ESRI shapefile into GeoPandas object
+    shape = gpd.GeoDataFrame.from_file(shapefile)
+    
+    for poly in shape.geometry:
+        if poly.geom_type == 'Polygon':
+#            print 'polygon found', poly
+            mpoly = transform(m, poly)
             patches.append(PolygonPatch(mpoly))
+        elif poly.geom_type == 'MultiPolygon':
+            for subpoly in poly:
+#                print 'subpolygon found', subpoly
+                mpoly = transform(m, subpoly)
+                patches.append(PolygonPatch(mpoly))
     else:
         print 'Neither a polygon for a multi-polygon'
 
 pc  = PatchCollection(patches, match_original=True)
-pc.set_facecolor('green')
+pc.set_facecolor(colors)
+pc.set_edgecolor('none')
+pc.set_alpha(0.5)
 pc.set_zorder(4)
 
 sq = ax.add_collection(pc)
 
-pngfile = 'plot_europe1b.png'
+pngfile = 'plot_europe2.png'
 fig.savefig(pngfile, dpi=300)
 
 print 'done.'

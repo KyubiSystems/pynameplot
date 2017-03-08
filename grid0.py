@@ -14,10 +14,10 @@
 # limitations under the License.
 
 # Generate list of coordinates for gridsquare
-# input 4-tuple of grid centre, dlongitude, dlatitude
+# input 4-tuple of grid TLC, dlongitude, dlatitude
 # return list of 4 coords for grid corners
 
 def gridsquare(coords):
     (lon, lat, dlon, dlat) = coords
-    gs = [(lon - dlon/2., lat - dlat/2.), (lon - dlon/2., lat + dlat/2.), (lon + dlon/2., lat + dlat/2.), (lon + dllon/2., lat - dlat/2.)]
+    gs = [(lon, lat), (lon - dlon, lat), (lon-dlon, lat-dlat), (lon, lat-dlat)]
     return gs

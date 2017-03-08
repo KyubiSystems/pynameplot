@@ -50,6 +50,9 @@ lat_bounds = [ 1., 8. ]
 lon_axis = [4., 6.]
 lat_axis = [2., 4., 6.]
 
+lon_warri = 5.5
+lat_warri = 6.0
+
 # ---------------------------------------
 print 'Loading ' + filename + '...',
 
@@ -142,12 +145,12 @@ m = Basemap(llcrnrlon=lon_bounds[0], llcrnrlat=lat_bounds[0],
                         projection='lcc', lat_1=2., lat_2=6., lon_0=4.,
                         resolution='i', area_thresh=1000.)
 
-m.drawcoastlines(color='white')
-m.drawcountries(color='white')
+m.drawcoastlines(color='white', zorder=8)
+m.drawcountries(color='white', zorder=8)
 m.drawmapboundary(fill_color='#444444')
 m.fillcontinents(color='#bbbbbb',lake_color='#444444')
-m.drawparallels(lat_axis, linewidth=0.5, color='white')
-m.drawmeridians(lon_axis, linewidth=0.5, color='white')
+m.drawparallels(lat_axis, linewidth=0.5, color='white', labels=[1,0,0,1], zorder=8)
+m.drawmeridians(lon_axis, linewidth=0.5, color='white', labels=[1,0,0,1], zorder=8)
 
 ax.set_title(filename, fontsize=12)
 
@@ -158,7 +161,7 @@ for poly in geo_df['grid']:
     patches.append(PolygonPatch(mpoly))
 
 
-pc = PatchCollection(patches, cmap=cm.hot, norm=norm, match_original=True)
+pc = PatchCollection(patches, cmap=cm.rainbow, norm=norm, match_original=True)
 pc.set_edgecolor('none')
 pc.set_zorder(4)
 pc.set(array=geo_df[ts])
@@ -169,7 +172,11 @@ fig.text(0.4, 0.15, ts, color='white', transform=ax.transAxes)
 
 fig.colorbar(pc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
 
-pngfile = 'plot_test4a.png'
+# plot WARRI
+x_warri, y_warri = m(lon_warri, lat_warri)
+m.plot(x_warri, y_warri, 'kx', markersize=12, zorder=10)
+
+pngfile = 'plot_test4b.png'
 fig.savefig(pngfile, dpi=300)
 
 print "done"
