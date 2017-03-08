@@ -176,7 +176,7 @@ fig.colorbar(pc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
 x_warri, y_warri = m(lon_warri, lat_warri)
 m.plot(x_warri, y_warri, 'kx', markersize=12, zorder=10)
 
-pngfile = 'plot_test4b.png'
+pngfile = 'plot_test4c.png'
 fig.savefig(pngfile, dpi=300)
 
 print "done"
