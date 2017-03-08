@@ -191,7 +191,8 @@ for shapefile in files:
                 mpoly = transform(m, subpoly)
                 patches.append(PolygonPatch(mpoly))
     else:
-        print 'Neither a polygon for a multi-polygon'
+        pass
+#        print 'Neither a polygon for a multi-polygon'
 
 pc  = PatchCollection(patches, match_original=True)
 pc.set_facecolor(colors)
