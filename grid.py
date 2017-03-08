@@ -19,5 +19,5 @@
 
 def gridsquare(coords):
     (lon, lat, dlon, dlat) = coords
-    gs = [(lon - dlon/2., lat - dlat/2.), (lon - dlon/2., lat + dlat/2.), (lon + dlon/2., lat + dlat/2.), (lon + dllon/2., lat - dlat/2.)]
+    gs = [(lon - dlon/2., lat - dlat/2.), (lon - dlon/2., lat + dlat/2.), (lon + dlon/2., lat + dlat/2.), (lon + dlon/2., lat - dlat/2.)]
     return gs
