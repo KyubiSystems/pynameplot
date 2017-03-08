@@ -125,7 +125,7 @@ df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
 df['grid'] = [ Polygon(gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
 
 # Create GeoDataFrame with point and grid geometry columns
-geo_df = GeoDataFrame(df, crs=crs, geometry=df['points'])
+geo_df = gpd.GeoDataFrame(df, crs=crs, geometry=df['points'])
 
 print 'done'
 
