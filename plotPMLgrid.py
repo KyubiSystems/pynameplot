@@ -69,11 +69,11 @@ filename = 'PML_NAME_output/low5dayPML_20150501.txt'
 
 # Map bounds
 
-lon_bounds = [-20., 20. ]
-lat_bounds = [ 40., 60. ]
+lon_bounds = [-30., 20. ]
+lat_bounds = [ 40., 70. ]
 
 lon_axis = [ -20., -10., 0., 10 ]
-lat_axis = [ 45., 50., 55., 60. ]
+lat_axis = [ 45., 50., 55., 60., 65. ]
 
 lon_pml = -4.1931
 lat_pml = 50.3189
@@ -161,14 +161,14 @@ m = Basemap(llcrnrlon=lon_bounds[0], llcrnrlat=lat_bounds[0],
                                     projection='cyl', lat_1=45., lat_2=55., lon_0=0.,
                                     resolution='l', area_thresh=1000.)
 
-m.drawcoastlines(color='white')
-m.drawcountries(color='white')
+m.drawcoastlines(color='white', zorder=8)
+m.drawcountries(color='white', zorder=8)
 m.drawmapboundary(fill_color='#444444')
 m.fillcontinents(color='#bbbbbb',lake_color='#444444')
-m.drawparallels(lat_axis, linewidth=0.5, color='white', labels=[1,0,0,1])
-m.drawmeridians(lon_axis, linewidth=0.5, color='white', labels=[1,0,0,1])
+m.drawparallels(lat_axis, linewidth=0.5, color='white', labels=[1,0,0,1], zorder=8)
+m.drawmeridians(lon_axis, linewidth=0.5, color='white', labels=[1,0,0,1], zorder=8)
 
-ax.set_title('filename, fontsize=12')
+ax.set_title(filename, fontsize=10)
 
 
 # Loop over input shapefiles
@@ -212,7 +212,7 @@ for poly in geo_df['grid']:
 
 gpc = PatchCollection(gpatches, cmap=cm.rainbow, norm=norm, match_original=True)
 gpc.set_edgecolor('none')
-gpc.set_zorder(10)
+gpc.set_zorder(6)
 gpc.set(array=geo_df[ts])
 
 gsq = ax.add_collection(gpc)
