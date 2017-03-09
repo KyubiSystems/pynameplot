@@ -17,6 +17,7 @@ numpy==1.12.0
 olefile==0.44
 packaging==16.8
 pandas==0.19.2
+pep8==1.7.0
 Pillow==4.0.0
 pygeoif==0.6
 pykml==0.1.3

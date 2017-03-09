@@ -6,10 +6,10 @@
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
-# 
+#
 #    http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or in writing, software 
+#
+# Unless required by applicable law or in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
@@ -53,15 +53,12 @@ with open(shapelist, 'r') as f:
 
     for line in f:
         if "," in line:
-            (filename, colorname) = line.split(",",1)
+            (filename, colorname) = line.split(",", 1)
             filename = filename.strip()
             colorname = colorname.strip()
 
             files.append(filename)
             colors.append(colorname)
-
-#print files
-#print colors
 
 # ------------------------------------
 # input NAME filename
@@ -69,11 +66,11 @@ filename = 'PML_NAME_output/low5dayPML_20150501.txt'
 
 # Map bounds
 
-lon_bounds = [-30., 20. ]
-lat_bounds = [ 40., 70. ]
+lon_bounds = [-30., 20.]
+lat_bounds = [40., 70.]
 
-lon_axis = [ -20., -10., 0., 10 ]
-lat_axis = [ 45., 50., 55., 60., 65. ]
+lon_axis = [-20., -10., 0., 10]
+lat_axis = [45., 50., 55., 60., 65.]
 
 lon_pml = -4.1931
 lat_pml = 50.3189
@@ -101,7 +98,7 @@ collist = c[0]
 
 # Set leader column names
 collist[1:4] = ['X-Index', 'Y-Index', 'Longitude', 'Latitude']
-collist = [ x.strip() for x in collist ]
+collist = [x.strip() for x in collist]
 
 # Get observation timestamp strings
 timestamps = collist[5::]
@@ -110,7 +107,7 @@ timestamps = collist[5::]
 df.columns = collist[1::]
 
 # Drop leading rows
-df = df.drop([0,1,2,3])
+df = df.drop([0, 1, 2, 3])
 
 # Convert strings to floats where possible
 df = df.apply(lambda x: pd.to_numeric(x, errors='ignore'))
@@ -119,10 +116,10 @@ df = df.apply(lambda x: pd.to_numeric(x, errors='ignore'))
 crs = {'init': 'epsg:4326'}
 
 # Generate Shapely Point objects for each grid point
-df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
+df['points'] = [Point(xy) for xy in zip(df.Longitude, df.Latitude)]
 
 # Generate Shapely Polygons for grid squares
-df['grid'] = [ Polygon(gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
+df['grid'] = [Polygon(gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude)]
 
 # Create GeoDataFrame with point and grid geometry columns
 geo_df = gpd.GeoDataFrame(df, crs=crs, geometry=df['points'])
@@ -131,8 +128,8 @@ print 'done'
 
 # Get minimum non-zero concentration value
 cl = geo_df[timestamps].values.tolist()
-flat = [ item for sublist in cl for item in sublist ]
-min_conc = min([ x for x in flat if x > 0.0 ])
+flat = [item for sublist in cl for item in sublist]
+min_conc = min([x for x in flat if x > 0.0])
 
 # Get maximum concentration value
 max_conc = geo_df[timestamps].values.max()
@@ -157,19 +154,18 @@ ax.set_aspect('equal')
 norm = matplotlib.colors.LogNorm(vmin=min_conc, vmax=max_conc, clip=False)
 
 m = Basemap(llcrnrlon=lon_bounds[0], llcrnrlat=lat_bounds[0],
-                                    urcrnrlon=lon_bounds[1], urcrnrlat=lat_bounds[1],
-                                    projection='cyl', lat_1=45., lat_2=55., lon_0=0.,
-                                    resolution='l', area_thresh=1000.)
+            urcrnrlon=lon_bounds[1], urcrnrlat=lat_bounds[1],
+            projection='cyl', lat_1=45., lat_2=55., lon_0=0.,
+            resolution='l', area_thresh=1000.)
 
 m.drawcoastlines(color='white', zorder=8)
 m.drawcountries(color='white', zorder=8)
 m.drawmapboundary(fill_color='#444444')
-m.fillcontinents(color='#bbbbbb',lake_color='#444444')
-m.drawparallels(lat_axis, linewidth=0.5, color='white', labels=[1,0,0,1], zorder=8)
-m.drawmeridians(lon_axis, linewidth=0.5, color='white', labels=[1,0,0,1], zorder=8)
+m.fillcontinents(color='#bbbbbb', lake_color='#444444')
+m.drawparallels(lat_axis, linewidth=0.5, color='white', labels=[1, 0, 0, 1], zorder=8)
+m.drawmeridians(lon_axis, linewidth=0.5, color='white', labels=[1, 0, 0, 1], zorder=8)
 
 ax.set_title(filename, fontsize=10)
-
 
 # Loop over input shapefiles
 
@@ -179,28 +175,38 @@ for shapefile in files:
 
     # read ESRI shapefile into GeoPandas object
     shape = gpd.GeoDataFrame.from_file(shapefile)
-    
+
     for poly in shape.geometry:
         if poly.geom_type == 'Polygon':
-#            print 'polygon found', poly
+            # print 'polygon found', poly
             mpoly = transform(m, poly)
             patches.append(PolygonPatch(mpoly))
         elif poly.geom_type == 'MultiPolygon':
             for subpoly in poly:
-#                print 'subpolygon found', subpoly
+                # print 'subpolygon found', subpoly
                 mpoly = transform(m, subpoly)
                 patches.append(PolygonPatch(mpoly))
     else:
         pass
-#        print 'Neither a polygon for a multi-polygon'
+        # print 'Neither a polygon for a multi-polygon'
 
-pc  = PatchCollection(patches, match_original=True)
+pc = PatchCollection(patches, match_original=True)
 pc.set_facecolor(colors)
-pc.set_edgecolor('none')
+pc.set_edgecolor('red')
 pc.set_alpha(0.5)
+pc.set_linewidth(0.5)
 pc.set_zorder(4)
 
 sq = ax.add_collection(pc)
+
+pc2 = PatchCollection(patches, match_original=True)
+pc2.set_facecolor('none')
+pc2.set_edgecolor('red')
+pc2.set_alpha(0.5)
+pc2.set_linewidth(0.5)
+pc2.set_zorder(10)
+
+sq2 = ax.add_collection(pc2)
 
 # ------------------------------------
 
@@ -225,11 +231,11 @@ fig.colorbar(gpc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
 
 # plot PML site marker
 x_pml, y_pml = m(lon_pml, lat_pml)
-m.plot(x_pml, y_pml, 'kx', markersize=12, zorder=10)
+m.plot(x_pml, y_pml, 'kx', markersize=8, zorder=10)
 
 # ------------------------------------
 
-pngfile = 'plot_europe_grid.png'
+pngfile = 'plot_europe_grid2.png'
 fig.savefig(pngfile, dpi=300)
 
 print 'done.'
