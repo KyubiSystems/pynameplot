@@ -26,8 +26,6 @@ import os
 # local NAME libraries
 from grid import gridsquare
 from header import loadheader
-from geom import reproj, coverfactor, shortname
-
 
 class Namefile:
     'Base class for NAME data storage objects'
@@ -93,7 +91,6 @@ class Namefile:
         # Create GeoDataFrame with point and grid geometry columns
         self.data = gpd.GeoDataFrame(df, crs=crs, geometry=df['points'])
 
-
     # Get minimum & maximum concentration values
     def get_minmax(self):
         # Flatten list of concentration values
@@ -107,19 +104,5 @@ class Namefile:
         self.max_conc = self.data[self.timestamps].values.max()
         
         return (self.min_conc, self.max_conc)
-
         
-    # Get covering factor value column for input ESRI shapefile
-    def get_cover(self, shapefile):
-
-        if not os.path.isfile(shapefile):
-            exit('Input shapefile ' + shapefile + ' does not exist')
-
-        sf = shortname(shapefile)
-        
-        shape = gpd.GeoDataFrame.from_file(shapefile)
-
-        geo = shape.geometry
-        
-        self.data[sf] = [coverfactor(geo, s) for s in self.data['grid']]
         
