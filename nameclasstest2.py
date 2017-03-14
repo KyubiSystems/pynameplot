@@ -27,6 +27,8 @@ print "Minimum concentration: ", min_conc
 print "Maximum concentration: ", max_conc
 
 # Generate covering factor column for input ESRI shapefile
+print 'Starting covering factor calculation...',
 name.get_cover('PML_shapefiles/UK.shp')
+print ' done.'
 
-print name.data['UK']
+#print name.data['UK']
