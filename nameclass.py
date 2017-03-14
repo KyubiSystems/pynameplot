@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Author: Duncan Law-Green (dlg@kyubi.co.uk)
 # Copyright 2017 Kyubi Systems
 # 
@@ -20,6 +18,7 @@ import numpy as np
 import pandas as pd
 import geopandas as gpd
 
+from shapely import speedups
 from shapely.geometry import Point, Polygon
 
 import os
@@ -41,6 +40,10 @@ class Namefile:
 
         if not os.path.isfile(self.filename):
             exit('Input filename ' + self.filename + ' does not exist')
+
+        # Enable Shapely native C++ acceleration
+        if speedups.available:
+            speedups.enable()
 
         # read and parse NAME file header
         self.header = loadheader(self.filename)
@@ -83,7 +86,7 @@ class Namefile:
         df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
     
         # Generate Shapely Polygons for grid squares
-        df['grid'] = [ Polygon(gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
+        df['grid'] = [ Polygon(gridsquare(xy + self.grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
     
         # Create GeoDataFrame with point and grid geometry columns
         self.data = gpd.GeoDataFrame(df, crs=crs, geometry=df['points'])
