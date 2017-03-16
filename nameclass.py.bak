@@ -26,9 +26,8 @@ import os
 # local NAME libraries
 from grid import gridsquare
 from header import loadheader
-from geom import reproj, coverfactor
+from geom import reproj, coverfactor, shortname
 
-from shapeclass import Shape
 
 class Namefile:
     'Base class for NAME data storage objects'
@@ -113,8 +112,14 @@ class Namefile:
     # Get covering factor value column for input ESRI shapefile
     def get_cover(self, shapefile):
 
-        shape = Shape(shapefile)
+        if not os.path.isfile(shapefile):
+            exit('Input shapefile ' + shapefile + ' does not exist')
 
-        # calculate covering factor column
-        self.data[shape.shortname] = [coverfactor(shape.proj_geo, s, shape.lat_min, shape.lat_max) for s in self.data['grid']]
+        sf = shortname(shapefile)
+        
+        shape = gpd.GeoDataFrame.from_file(shapefile)
+
+        geo = shape.geometry
+        
+        self.data[sf] = [coverfactor(geo, s) for s in self.data['grid']]
         

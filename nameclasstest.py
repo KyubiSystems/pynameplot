@@ -25,3 +25,11 @@ name = Namefile('PML_NAME_output/low5dayPML_20150501.txt')
 
 print "Minimum concentration: ", min_conc
 print "Maximum concentration: ", max_conc
+
+# Generate covering factor column for input ESRI shapefile
+print 'Starting covering factor calculation...',
+name.get_cover('PML_shapefiles/UK.shp')
+print ' done.'
+
+n = name.data['UK']
+print n.loc[n != 0.0]

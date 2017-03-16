@@ -35,7 +35,9 @@ def reproj(geom, lat1, lat2):
 # --------------------------------------
 # calculate covering factor of ESRI shape over grid square (float 0.0 -- 1.0)
 
-def coverfactor(geom, square, lat_min, lat_max):
+def coverfactor(geom, square):
+    lat_min = geom.bounds['miny'].min()
+    lat_max = geom.bounds['maxy'].max()
 
     # reproject grid square
     square_proj = reproj(square, lat_min, lat_max)
@@ -45,10 +47,16 @@ def coverfactor(geom, square, lat_min, lat_max):
     # loop over shapes in shapefile
     for g in geom:
     
-        inters = g.intersection(square_proj)
+        # reproject shape
+        geo_proj = reproj(g, lat_min, lat_max)
+        
+        inters = geo_proj.intersection(square_proj)
 
         cf += (inters.area/square_proj.area)
     
     return cf
 
+# --------------------------------------
+def shortname(filename):
+    return os.path.splitext(os.path.basename(filename))[0]
 
