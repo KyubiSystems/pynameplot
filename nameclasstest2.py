@@ -28,7 +28,8 @@ print "Maximum concentration: ", max_conc
 
 # Generate covering factor column for input ESRI shapefile
 print 'Starting covering factor calculation...',
-name.get_cover('PML_shapefiles/UK.shp')
+name.get_cover('PML_shapefiles/shipping_lane.shp')
 print ' done.'
 
-#print name.data['UK']
+n = name.data['shipping_lane']
+print n.loc[n != 0.0]
