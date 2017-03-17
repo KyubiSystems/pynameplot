@@ -33,11 +33,10 @@ class Shape(object):
 
         self.shortname = self.shorten(self.shapefile)
 
-        shp = gpd.GeoDataFrame.from_file(self.shapefile)
-
-        self.geo = shp.geometry
+        self.data = gpd.GeoDataFrame.from_file(self.shapefile)
 
         # Get shape latitude extent
+        self.geo = self.data.geometry
         self.lat_min = self.geo.bounds['miny'].min()
         self.lat_max = self.geo.bounds['maxy'].max()
 

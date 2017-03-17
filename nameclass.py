@@ -92,7 +92,7 @@ class Namefile:
         df['grid'] = [ Polygon(gridsquare(xy + self.grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
     
         # Create GeoDataFrame with point and grid geometry columns
-        self.data = gpd.GeoDataFrame(df, crs=crs, geometry=df['points'])
+        self.data = gpd.GeoDataFrame(df, crs=crs, geometry=df['grid'])
 
 
     # Get minimum & maximum concentration values
