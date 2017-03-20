@@ -86,13 +86,23 @@ class Namefile:
         crs = {'init': 'epsg:4326'}
     
         # Generate Shapely Point objects for each grid point
-        df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
+        #df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
     
         # Generate Shapely Polygons for grid squares
         df['grid'] = [ Polygon(gridsquare(xy + self.grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
     
         # Create GeoDataFrame with point and grid geometry columns
         self.data = gpd.GeoDataFrame(df, crs=crs, geometry=df['grid'])
+
+
+    # sum given list of timestamp columns
+    def add_range(self, ts):
+        self.data['total'] = self.data[ts].sum(axis=1)
+
+
+    # sum all timestamp columns in file
+    def add_all(self):
+        self.data['total'] = self.data[self.timestamps].sum(axis=1)
 
 
     # Get minimum & maximum concentration values
