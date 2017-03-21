@@ -14,16 +14,45 @@
 # limitations under the License.
 
 import arrow
+import glob
+import os
 
 from nameclass import Name
 
 class Multiname:
       'Class to sum across multiple NAME files'
 
-      filelist = []
-      path = ''
+      directory = ''
+      files = []
+      dates = {}
       start = ''
       finish = ''
-      mode = ''  # one of day|week|month|year
+      mode = ''  # one of day|week|month|year|all
+      valid_modes = ['day', 'week', 'month', 'year', 'all']
 
-      # initialise MultiName object with path, start and finish times
+      # initialise MultiName object with directory path
+      def __init__(self, directory):
+
+            self.directory = directory
+
+            if not os.path.isdir(directory):
+                  exit "Input directory does not exist"
+
+            self.files = glob.glob(directory + '/*.txt')
+
+            for f in self.files:
+                dates[self.basename(f)] = arrow.get(self.basename(f), 'YYYYMMMDD')  
+
+
+      def basename(self, path):
+
+            return os.path.splitext(os.path.basename)[0]
+
+
+      def setmode(self, mode):
+
+            if mode not in self.valid_modes:
+                  exit "Invalid mode selected"
+
+            self.mode = mode
+
