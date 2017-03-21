@@ -33,7 +33,8 @@ from functools import partial
 # local NAME libraries
 from grid import gridsquare
 from header import loadheader
-from geom import reproj, coverfactor, shortname
+from geom import reproj, coverfactor
+from shapeclass import shorten
 
 # --------------------------------------
 # Enable C++ native acceleration for Shapely processing
@@ -62,7 +63,7 @@ with open(shapelist, 'r') as f:
 
 for shapefile in files:
 
-    print shortname(shapefile)
+    print shorten(shapefile)
     
     # read ESRI shapefile into GeoPandas object
     shape = gpd.GeoDataFrame.from_file(shapefile)
