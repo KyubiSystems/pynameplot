@@ -16,8 +16,8 @@
 import geopandas as gpd
 import os
 
-from geom import reproj
-from util import basename
+from .geom import reproj
+from .util import shortname
 
 class Shape(object):
     'Base class for shape derived from ESRI shapefile'
@@ -32,7 +32,7 @@ class Shape(object):
         if not os.path.isfile(self.shapefile):
             raise ValueError
 
-        self.shortname = basename(self.shapefile)
+        self.shortname = shortname(self.shapefile)
 
         self.data = gpd.GeoDataFrame.from_file(self.shapefile)
 

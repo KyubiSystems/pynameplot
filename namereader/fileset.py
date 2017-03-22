@@ -19,7 +19,7 @@ import os
 from itertools import groupby
 
 from .name import Name
-from .util import basename
+from .util import shortname
 
 class Fileset:
       'Class to sum across multiple NAME files'
@@ -49,7 +49,7 @@ class Fileset:
             # generate dict of lists
             for f in self.files:
                   
-                  g = basename(f)
+                  g = shortname(f)
                   d = arrow.get(g, 'YYYYMMDD')
                   
                   self.dates[g] = d

@@ -15,6 +15,6 @@
 
 import os
 
-def basename(path):
+def shortname(filepath):
     
-    return os.path.splitext(os.path.basename)[0]
+    return os.path.splitext(os.path.basename(filepath))[0]

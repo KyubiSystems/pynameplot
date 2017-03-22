@@ -24,11 +24,10 @@ from shapely.geometry import Point, Polygon
 import os
 
 # local NAME libraries
-from grid import gridsquare
-from header import loadheader
-from geom import reproj, coverfactor
-
+from .header import loadheader
+from .geom import coverfactor, gridsquare, reproj
 from .shape import Shape
+
 
 class Name:
     'Base class for NAME data storage objects'
