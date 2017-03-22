@@ -16,7 +16,7 @@
 import arrow
 import glob
 import os
-import itertools
+from itertools import groupby
 
 from .name import Name
 from .util import basename
@@ -26,11 +26,14 @@ class Fileset:
 
       directory = ''
       files = []
-      dates = {}
-      start = ''
-      finish = ''
       mode = ''  # one of day|week|month|year|all
       valid_modes = ['day', 'week', 'month', 'year', 'all']
+
+      dates = {}
+      weeks = {}
+      months = {}
+      years = {}
+
 
       # initialise Fileset object with directory path
       def __init__(self, directory):
@@ -42,10 +45,21 @@ class Fileset:
 
             self.files = glob.glob(directory + '/*.txt')
 
+            # group input filenames by week, month, year
+            # generate dict of lists
             for f in self.files:
-                self.dates[basename(f)] = arrow.get(basename(f), 'YYYYMMMDD')  
+                  
+                  g = basename(f)
+                  d = arrow.get(g, 'YYYYMMDD')
+                  
+                  self.dates[g] = d
+
+                  self.weeks[self.getWeek(d)].append(f)
+                  self.months[self.getMonth(d)].append(f)
+                  self.years[self.getYear(d)].append(f)
 
 
+      # select Fileset mode for subsequent processing
       def setmode(self, mode):
 
             if mode not in self.valid_modes:
@@ -53,3 +67,14 @@ class Fileset:
 
             self.mode = mode
 
+      # return ISO-8601 week number from Arrow object
+      def getWeek(self, a):
+            return a.isocalendar()[1]
+
+      # return month number from Arrow object
+      def getMonth(self, a):
+            return a.format('M')
+
+      # return 4-digit year from Arrow object
+      def getYear(self, a):
+            return a.format('YYYY')
