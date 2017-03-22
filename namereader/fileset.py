@@ -16,7 +16,7 @@
 import arrow
 import glob
 import os
-from itertools import groupby
+from collections import defaultdict
 
 from .name import Name
 from .util import shortname
@@ -30,9 +30,9 @@ class Fileset:
       valid_modes = ['day', 'week', 'month', 'year', 'all']
 
       dates = {}
-      weeks = {}
-      months = {}
-      years = {}
+      weeks = defaultdict(list)
+      months = defaultdict(list)
+      years = defaultdict(list)
 
 
       # initialise Fileset object with directory path
