@@ -96,12 +96,12 @@ class Name:
 
     # sum given list of timestamp columns
     def add_range(self, ts):
-        self.data['total'] = self.data[ts].sum(axis=1)
+        self.data['subtotal'] = self.data[ts].sum(axis=1)
 
 
     # sum all timestamp columns in file
     def add_all(self):
-        self.data['total'] = self.data[self.timestamps].sum(axis=1)
+        self.data['subtotal'] = self.data[self.timestamps].sum(axis=1)
 
 
     # Get minimum & maximum concentration values
@@ -117,6 +117,12 @@ class Name:
         self.max_conc = self.data[self.timestamps].values.max()
         
         return (self.min_conc, self.max_conc)
+
+
+    # return only coordinate, subtotal columns
+    def trim(self):
+        cols = [ 'Longitude', 'Latitude', 'subtotal']
+        return self.data[cols]
 
         
     # Get covering factor value column for input ESRI shapefile
