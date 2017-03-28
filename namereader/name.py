@@ -120,7 +120,7 @@ class Name:
 
 
     # return only coordinate, subtotal columns
-    def trim(self):
+    def trimmed(self):
         cols = [ 'Longitude', 'Latitude', 'subtotal']
         return self.data[cols]
 
