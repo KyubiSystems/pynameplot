@@ -15,7 +15,7 @@
 
 import os
 
-from shapely.ops import transform
+from shapely.ops import transform, cascaded_union
 from shapely.geometry import Point, Polygon
 
 import pyproj
@@ -43,10 +43,11 @@ def coverfactor(geom, square, lat_min, lat_max):
     cf = 0.0
 
     # loop over shapes in shapefile
-    for g in geom:
-    
-        inters = g.intersection(square_proj)
 
+    for g in geom:
+
+        inters = g.intersection(square_proj)
+        
         cf += (inters.area/square_proj.area)
     
     return cf

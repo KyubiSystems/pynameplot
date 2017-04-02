@@ -43,4 +43,4 @@ class Shape(object):
 
         # reprojected geometry
         self.proj_geo = [ reproj(g, self.lat_min, self.lat_max) for g in self.geo ]
-       
+
