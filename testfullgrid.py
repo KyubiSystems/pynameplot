@@ -31,7 +31,7 @@ filename = 'PML_NAME_output/low5dayPML_20150501.txt'
 shapelist = "europe_shapes.list"
 
 # output pickle
-outfile = "PML.pickle"
+outfile = "PML.pickle2"
 
 
 if speedups.available:
@@ -86,6 +86,7 @@ for (colx, coly) in itertools.product(xcol, ycol):
 data = { 'Longitude': longitude, 'Latitude': latitude }
 
 df = pd.DataFrame(data)
+df = df[['Longitude', 'Latitude']]
 
 df['grid'] = [ Polygon(geom.gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
 
