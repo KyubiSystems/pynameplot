@@ -37,21 +37,23 @@ args = parser.parse_args()
 # Load zone gridfile
 zones = pd.read_pickle(args.grid)
 zones = zones.to_dense()
-print "Loaded master grid file %s..." % pklfile
+print "Loaded master grid file %s..." % args.grid
 
 # WILL LOOP OVER NAME FILES HERE ====
 # Instantiate NAME object from file
 name = name.Name(args.namefile)
 timestamps = name.timestamps
 data = name.data
-print "Loaded NAME file %s..." % namefile
+print "Loaded NAME file %s..." % args.namefile
 
 # Generate zone column names
-columns = list(zones)[3::]
-pc_cols = [ 'pc_' + c for c in columns ]
-fieldnames = ['Timestamp'] + columns + pc_cols
+shortnames = list(zones)[3::]
+pc_cols = [ 'pc_' + s for s in shortnames ]
+fieldnames = ['Timestamp'] + shortnames + pc_cols
 
 # -------------------------------------
+
+print "Writing output file %s..." % args.outfile
 
 with open(args.outfile, 'w') as csvfile:
 
@@ -60,8 +62,6 @@ with open(args.outfile, 'w') as csvfile:
 
     for t in timestamps:
         print "Processing time %s..." % t
-
-        print data[t]
 
         totals = {}
         precents = {}
@@ -76,5 +76,7 @@ with open(args.outfile, 'w') as csvfile:
 
         row = util.merge_dicts({ "Timestamp" : t }, totals, percents)
         writer.writerow(row)
+
+print "Done!"
 
 
