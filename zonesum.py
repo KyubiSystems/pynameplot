@@ -15,24 +15,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 import pandas as pd
 import csv
 from namereader import *
 
-namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename 
-pklfile = 'PML_master.pkl'  # input master grid file
-outfile = "testdata2.csv"  # output csv filename
+# -------------------------------------
+
+parser = argparse.ArgumentParser(prog='zonesum', description="Sum NAME concentration files over ESRI zones.")
+parser.add_argument("-n", "--namefile", help="Input NAME file to sum over", required=True)
+parser.add_argument("-m", "--grid", help="Input master grid file", required=True)
+parser.add_argument("-o", "--outfile", help="Output CSV results file", required=True)
+args = parser.parse_args()
+
+# namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename 
+# pklfile = 'PML_master.pkl'  # input master grid file
+# outfile = "testdata2.csv"  # output csv filename
 
 # -------------------------------------
 
 # Load zone gridfile
-zones = pd.read_pickle(pklfile)
+zones = pd.read_pickle(args.grid)
 zones = zones.to_dense()
 print "Loaded master grid file %s..." % pklfile
 
 # WILL LOOP OVER NAME FILES HERE ====
 # Instantiate NAME object from file
-name = name.Name(namefile)
+name = name.Name(args.namefile)
 timestamps = name.timestamps
 data = name.data
 print "Loaded NAME file %s..." % namefile
@@ -44,7 +53,7 @@ fieldnames = ['Timestamp'] + columns + pc_cols
 
 # -------------------------------------
 
-with open(outfile, 'w') as csvfile:
+with open(args.outfile, 'w') as csvfile:
 
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
     writer.writeheader()
@@ -58,7 +67,7 @@ with open(outfile, 'w') as csvfile:
         precents = {}
 
         for s in shortnames:
-            totals[s] = (data[t] * zone[s]).sum()
+            totals[s] = (data[t] * zone[s]).sum()   # Try lat/lon indexed multiplication here
 
         sum_conc = sum(totals.values())
 
