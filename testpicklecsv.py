@@ -33,32 +33,19 @@ outfile = "testdata2.csv"
 # Load zone gridfile
 zones = pd.read_pickle(pklfile)
 zones = zones.to_dense()
+print "Loaded master grid file %s..." % pklfile
 
-# Instantiate NAME object
+# Instantiate NAME object from file
 name = name.Name(namefile)
 timestamps = name.timestamps
+data = name.data
+print "Loaded NAME file %s..." % namefile
 
+# Generate zone column names
 columns = list(zones)[3::]
 pc_cols = [ 'pc_' + c for c in columns ]
 
-print '---------'
-
-data = name.data
-
-print zones
-
-data.set_index(['Longitude', 'Latitude'], inplace=True)
-zones.set_index(['Longitude', 'Latitude'], inplace=True)
-
-# m = pd.merge(name.data, zones, how='inner')
-
-print 'Indexed!'
-
-exit()
-
-print m
-
-
+# -------------------------------------
 
 with open(outfile, 'w') as csvfile:
 
@@ -67,7 +54,9 @@ with open(outfile, 'w') as csvfile:
     writer.writeheader()
 
     for t in timestamps:
-        print t
+        print "Processing time %s..." % t
+
+        print data[t]
 
         totals = {}
         precents = {}
