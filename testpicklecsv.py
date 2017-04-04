@@ -32,6 +32,7 @@ outfile = "testdata2.csv"
 
 # Load zone gridfile
 zones = pd.read_pickle(pklfile)
+zones = zones.to_dense()
 
 # Instantiate NAME object
 name = name.Name(namefile)
@@ -44,16 +45,20 @@ print '---------'
 
 data = name.data
 
+print zones
+
 data.set_index(['Longitude', 'Latitude'], inplace=True)
 zones.set_index(['Longitude', 'Latitude'], inplace=True)
 
-print data
+# m = pd.merge(name.data, zones, how='inner')
 
-m = pd.merge(name.data, zones, how='inner')
+print 'Indexed!'
+
+exit()
 
 print m
 
-exit()
+
 
 with open(outfile, 'w') as csvfile:
 
