@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 import numpy as np
 import pandas as pd
 import itertools
@@ -24,26 +25,32 @@ from shapely.geometry import Polygon
 
 from namereader import *
 
-# input NAME filename
-filename = 'PML_NAME_output/low5dayPML_20150501.txt'
-
-# shapefile name/colour list
-shapelist = "europe_shapes.list"
-
-# output pickle
-outfile = "PML.pickle2"
-
-
 if speedups.available:
     speedups.enable()
 
+# ------------------------------------
+
+parser = argparse.ArgumentParser(prog='makemastergrid', description='Generate master grid file from ESRI zones.')
+parser.add_argument("-n", "--namefile", help='Input NAME file to define grid shape', required=True)
+parser.add_argument("-s", "--shapelist", help='File containing list of input shapefiles', required=True)
+parser.add_argument("-o", "--outfile", help='Output master grid file name', required=True)
+args = parser.parse_args()
+
+print 'Starting makemastergrid...'
+
+#namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename
+#shapelist = "europe_shapes.list"  # shapefile name/colour list
+#outfile = "PML.pickle2"  # output pickle
 
 # ------------------------------------
+# Read list of shapefiles, colours
+
+print "Reading shape list %s..." % args.shapelist
 
 files = []
 colors = []
 
-with open(shapelist, 'r') as shp:
+with open(args.shapelist, 'r') as shp:
 
     for line in shp:
         if "," in line:
@@ -60,7 +67,9 @@ pcnames = [ 'pc_' + s for s in shortnames ]
 # ------------------------------------
 # Read NAME file header for grid parameters
 
-head = header.loadheader(filename)
+print "Parsing header %s..." % args.namefile
+
+head = header.loadheader(args.namefile)
 
 x0 = float(head['X grid origin'])
 y0 = float(head['Y grid origin'])
@@ -105,7 +114,8 @@ for f in files:
     # calculate covering factor column
     df[shp.shortname] = [geom.coverfactor(shp.proj_geo, s, shp.lat_min, shp.lat_max) for s in df['grid']]
 
-print "Done!"
+
+print "Writing output file %s..." % args.outfile
 
 # Generate grid lat-long index for subsequent matching
 df.set_index(['Longitude', 'Latitude'], inplace=True)
@@ -114,4 +124,6 @@ df.set_index(['Longitude', 'Latitude'], inplace=True)
 df = df.to_sparse(fill_value=0)
 
 # Write pickle file
-df.to_pickle(outfile)
+df.to_pickle(args.outfile)
+
+print "Done!"

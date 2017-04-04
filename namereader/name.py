@@ -93,6 +93,9 @@ class Name:
         # Create GeoDataFrame with point and grid geometry columns
         self.data = gpd.GeoDataFrame(df, crs=crs, geometry=df['grid'])
 
+        # Set lat/lon indices on data
+        self.data.set_index(["Longitude", "Latitude"], inplace=True)
+
 
     # sum given list of timestamp columns
     def add_range(self, ts):
