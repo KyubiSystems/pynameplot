@@ -44,11 +44,11 @@ def coverfactor(geom, square, lat_min, lat_max):
 
     # loop over shapes in shapefile
 
-    for g in geom:
+    # for g in geom:
 
-        inters = g.intersection(square_proj)
+    inters = geom.intersection(square_proj)
         
-        cf += (inters.area/square_proj.area)
+    cf += (inters.area/square_proj.area)
     
     return cf
 

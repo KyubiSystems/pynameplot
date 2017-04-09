@@ -47,7 +47,7 @@ data = name.data
 print "Loaded NAME file %s..." % args.namefile
 
 # Generate zone column names
-shortnames = list(zones)[3::]
+shortnames = list(zones)[1::]
 pc_cols = [ 'pc_' + s for s in shortnames ]
 fieldnames = ['Timestamp'] + shortnames + pc_cols
 
@@ -64,10 +64,10 @@ with open(args.outfile, 'w') as csvfile:
         print "Processing time %s..." % t
 
         totals = {}
-        precents = {}
+        percents = {}
 
         for s in shortnames:
-            totals[s] = (data[t] * zone[s]).sum()   # Try lat/lon indexed multiplication here
+            totals[s] = (data[t] * zones[s]).sum()   # Try lat/lon indexed multiplication here
 
         sum_conc = sum(totals.values())
 
