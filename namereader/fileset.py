@@ -26,8 +26,6 @@ class Fileset:
 
       directory = ''
       files = []
-      mode = ''  # one of day|week|month|year|all
-      valid_modes = ['day', 'week', 'month', 'year', 'all']
 
       dates = {}
       weeks = defaultdict(list)
@@ -58,14 +56,21 @@ class Fileset:
                   self.months[self.getMonth(d)].append(f)
                   self.years[self.getYear(d)].append(f)
 
+      # return all files
+      def all(self):
+            return self.files
 
-      # select Fileset mode for subsequent processing
-      def setmode(self, mode):
-
-            if mode not in self.valid_modes:
-                  raise ValueError
-
-            self.mode = mode
+      # return files between two dates
+      def between(self, start, stop):
+            a = arrow.get(start, 'YYYYMMDD')
+            b = arrow.get(stop, 'YYYYMMDD')
+            result = []
+            for f in self.files:
+                  g = shortname(f)
+                  d = arrow.get(g, 'YYYYMMDD')
+                  if (d >= a) and (d <=b):
+                        result.append(f)
+            return result
 
       # return ISO-8601 week number from Arrow object
       def getWeek(self, a):
