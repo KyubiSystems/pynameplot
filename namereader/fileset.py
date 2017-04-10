@@ -57,7 +57,7 @@ class Fileset:
                   self.years[self.getYear(d)].append(f)
 
       # return all files
-      def all(self):
+      def getAll(self):
             return self.files
 
       # return files between two dates
