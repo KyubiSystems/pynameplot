@@ -12,7 +12,7 @@ fs = fileset.Fileset(dirname)
 #files = fs.months['5']
 files = fs.years['2015']
 
-print files
+#print files
 
 n = name.Name(files[0])
 n.add_all()
@@ -25,7 +25,9 @@ for f in files[1::]:
     n2 = name.Name(f)
     n2.add_all()
     m2 = n2.trimmed()
-    m = pd.merge(m, m2, how='outer', on=['Longitude', 'Latitude'])
+
+#    m = pd.merge(m, m2, how='outer', on=['Longitude', 'Latitude'])
+    m = m.join(m2, how='outer')
     m = m.fillna(0)
 
     m.total = m.total + m.subtotal
