@@ -79,7 +79,7 @@ with open(args.outfile, 'w') as csvfile:
         # Instantiate NAME object from file
         namefile = name.Name(n)
         timestamps = namefile.timestamps
-        namedata = namefile.data
+        data = namefile.data
         print "Loaded NAME file %s..." % n
 
         for t in timestamps:
@@ -89,17 +89,16 @@ with open(args.outfile, 'w') as csvfile:
             percents = {}
             sum_conc = 0.0
 
-            d = namedata[t]
-
             for s in shortnames:
 
                 z = zones[s]
-                totals[s] = (d * z).sum()   # lat/lon indexed multiplication 
-                
+                zone = z.loc[z != 0.0]  # Extract non-zero subset of zone column
+                totals[s] = (data[t] * zone).sum()   # lat/lon indexed multiplication 
+
                 sum_conc = sum(totals.values())
         
             for s in shortnames:
-                percents[ 'pc_' + s ] = (totals[s] / sum_conc) * 100.0   # Calculate zone percentages
+                percents[ 'pc_' + s ] = (totals[s] / sum_conc) * 100.0
 
                 row = util.merge_dicts({ "Timestamp" : t }, totals, percents)
 
