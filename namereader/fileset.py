@@ -22,8 +22,9 @@ from .name import Name
 from .util import shortname
 
 class Fileset:
-      'Class to sum across multiple NAME files'
-
+      """Read directory of NAME files, 
+      extract subset corresponding to given time period
+      """
       directory = ''
       files = []
 
@@ -32,10 +33,11 @@ class Fileset:
       months = defaultdict(list)
       years = defaultdict(list)
 
-
-      # initialise Fileset object with directory path
       def __init__(self, directory):
+            """Initialise Fileset object.
 
+            directory -- input directory path
+            """
             self.directory = directory
 
             if not os.path.isdir(directory):
@@ -56,12 +58,18 @@ class Fileset:
                   self.months[self.getMonth(d)].append(f)
                   self.years[self.getYear(d)].append(f)
 
-      # return all files
+
       def getAll(self):
+            """Return all NAME files found in directory"""
             return self.files
 
-      # return files between two dates
+
       def between(self, start, stop):
+            """Return NAME files between two dates
+
+            start -- start date, YYYYMMDD format
+            stop -- stop date, YYYYMMDD format
+            """
             a = arrow.get(start, 'YYYYMMDD')
             b = arrow.get(stop, 'YYYYMMDD')
             result = []
@@ -72,14 +80,24 @@ class Fileset:
                         result.append(f)
             return result
 
-      # return ISO-8601 week number from Arrow object
+
       def getWeek(self, a):
+            """Return week number for given Arrow object
+            a -- Arrow timestamp object
+           """
             return a.isocalendar()[1]
 
-      # return month number from Arrow object
+
       def getMonth(self, a):
+            """Return month number for given Arrow object
+            a -- Arrow timestamp object
+            """
             return a.format('M')
 
-      # return 4-digit year from Arrow object
+
       def getYear(self, a):
+            """Return year for given Arrow object
+            a -- Arrow timestamp object
+            """
+
             return a.format('YYYY')
