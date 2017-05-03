@@ -32,7 +32,7 @@ args = parser.parse_args()
 # ------------------------------------
 # Configuration options
 
-config = ConfigObj(args.config)
+config = ConfigObj(args.config, raise_errors=True, list_values=True)
 
 # input path
 shapelist = config['shapelist']  # Text file containing list of shapefiles
