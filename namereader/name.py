@@ -30,14 +30,18 @@ from .shape import Shape
 
 
 class Name:
-    'Base class for NAME data storage objects'
+    """Define and create NAME data storage object"""
 
     filename = ""
     timestamps = []  
     header = {}  
 
-    # Initialise NAME object from data file at 'filename'
+
     def __init__(self, filename):
+        """Initialise NAME object
+
+        filename -- path to NAME file"""
+
         self.filename = filename
 
         if not os.path.isfile(self.filename):
@@ -97,18 +101,23 @@ class Name:
         self.data.set_index(["Longitude", "Latitude"], inplace=True)
 
 
-    # sum given list of timestamp columns
     def add_range(self, ts):
+        """Sum given range of timestamp columns
+
+        ts -- list of timestamp labels"""
+
         self.data['subtotal'] = self.data[ts].sum(axis=1)
 
 
-    # sum all timestamp columns in file
     def add_all(self):
+        """Sum all timestamp columns found in file"""
+
         self.data['subtotal'] = self.data[self.timestamps].sum(axis=1)
 
 
-    # Get minimum & maximum concentration values
     def get_minmax(self):
+        """Get minimum and maximum concentration data values"""
+
         # Flatten list of concentration values
         cl = self.data[self.timestamps].values.tolist()
         flat = [item for sublist in cl for item in sublist]
@@ -122,14 +131,17 @@ class Name:
         return (self.min_conc, self.max_conc)
 
 
-    # return only coordinate, subtotal columns
     def trimmed(self):
+        """Return only coordinate, subtotal columns"""
+
         cols = [ 'subtotal' ]
         return self.data[cols]
 
         
-    # Get covering factor value column for input ESRI shapefile
     def get_cover(self, shapefile):
+        """Get covering factor value for input ESRI shapefile
+
+        shapefile -- Path to ESRI shape file"""
 
         shape = Shape(shapefile)
 

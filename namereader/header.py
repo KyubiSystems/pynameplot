@@ -15,10 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Load NAME file and parse header lines into dict
-
 def loadheader(filename):
-    
+    """Load NAME file and parse header lines into dict.
+    filename -- input NAME file
+    """
     header = {}
     
     with open(filename, 'r') as f:
