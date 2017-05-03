@@ -32,7 +32,8 @@ warnings.filterwarnings("ignore")
 #--------------
 class Map(object):
 
-    """Define and create a visualisation plot
+    """
+    Define and create a visualisation plot
     from NAME concentration data
     """
 
@@ -44,7 +45,8 @@ class Map(object):
     conc = []
 
     def __init__(self, name, column='total'):
-        """Initialise Map object.
+        """
+        Initialise Map object.
 
         name   -- a loaded Name object containing parsed data
         column -- column name to plot. Default is 'total' column from summed file.
@@ -66,7 +68,8 @@ class Map(object):
 
 
     def setScale(self, conc):
-        """Set normalisation scale manually.
+        """
+        Set normalisation scale manually.
 
         conc -- 2-tuple containing (min, max) values of concentration scale
         """
@@ -79,7 +82,8 @@ class Map(object):
 
 
     def setBounds(self, lon_range, lat_range):
-        """Set map latitude and longitude bounds.
+        """
+        Set map latitude and longitude bounds.
 
         lon_range -- 2-tuple containing (lon_min, lon_max)
         lat_range -- 2-tuple containing (lat_min, lat_max)
@@ -93,7 +97,8 @@ class Map(object):
 
 
     def setAxes(self, lon_axis, lat_axis):
-        """Set map tick arrays in longitude and latitude.
+        """
+        Set map tick arrays in longitude and latitude.
 
         lon_axis -- list containing longitude tick mark values.
         lat_axis -- list containing latitude tick mark values.
@@ -107,7 +112,8 @@ class Map(object):
 
 
     def setProjection(self, projection):
-        """Override default projection type.
+        """
+        Override default projection type.
 
         projection -- string giving projection type
         """
@@ -117,7 +123,8 @@ class Map(object):
 
     #--------------------------------------------------------
     def drawBase(self):
-        """Set up map projection
+        """
+        Set up map projection
         Draw basic map layout including coastlines and boundaries
         Draw lat-long grid
         Set plot title from filename
@@ -140,7 +147,8 @@ class Map(object):
 
     #--------------------------------------------------------
     def zoneLoad(self, files):
-        """Load gepgraphic zones from list of ESRI shapefiles
+        """
+        Load gepgraphic zones from list of ESRI shapefiles
         files -- list containing ESRI shapefiles
         """
 
@@ -165,7 +173,8 @@ class Map(object):
                     
 
     def zoneColour(self, colours):
-        """Set display colours for defined ESRI shapes
+        """
+        Set display colours for defined ESRI shapes
         colours -- list containing HTML colour names
         """
 
@@ -184,7 +193,8 @@ class Map(object):
         sq = self.ax.add_collection(pc)
 
     def zoneLines(self, edgecolour='red'):        
-        """Set boundary colour for defined ESRI shapes
+        """
+        Set boundary colour for defined ESRI shapes
         edgecolour -- HTML colour name for boundary
         """
 
@@ -200,7 +210,8 @@ class Map(object):
 
     #--------------------------------------------------------
     def gridSetup(self):
-        """Iterate over data cells defined in NAME 'grid' column
+        """
+        Iterate over data cells defined in NAME 'grid' column
         and add them to PolygonPatch list for plotting
         """
 
@@ -212,7 +223,8 @@ class Map(object):
             
 
     def gridColormap(self, colormap=cm.rainbow):
-        """Set colourmap with existing normalisation
+        """
+        Set colourmap with existing normalisation
         colormap -- Matplotlib colourmap name
         """
         self.colormap = colormap
@@ -220,7 +232,8 @@ class Map(object):
 
 
     def gridSolid(self, color='blue'):
-        """Override colourmap with solid colour
+        """
+        Override colourmap with solid colour
         color -- HTML colour
         """
         self.solid = True
@@ -229,7 +242,8 @@ class Map(object):
 
 
     def gridDraw(self):
-        """Draw data column values on map
+        """
+        Draw data column values on map
         Add colourbar to plot where plot is not solid type
         """
         self.gpc.set_edgecolor('none')
@@ -242,12 +256,15 @@ class Map(object):
 
     #--------------------------------------------------------
     def addTimestamp(self):
-        """Add timestamp to plot"""
+        """
+        Add timestamp to plot
+        """
         self.fig.text(0.4, 0.15, self.column, color='white', transform=self.ax.transAxes)
 
 
     def addMarker(self, lon, lat):
-        """Add marker to plot at station coordinates
+        """
+        Add marker to plot at station coordinates
         lon -- station longitude
         lat -- station latitude
         """
@@ -256,7 +273,8 @@ class Map(object):
 
 
     def saveFile(self, filename='plotname.png'):
-        """Save plot output file
+        """
+        Save plot output file
         filename -- output file including type extension
         """
         self.fig.savefig(flename, dpi=300)

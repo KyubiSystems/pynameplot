@@ -22,7 +22,8 @@ from .name import Name
 from .util import shortname
 
 class Fileset:
-      """Read directory of NAME files, 
+      """
+      Read directory of NAME files, 
       extract subset corresponding to given time period
       """
       directory = ''
@@ -34,7 +35,8 @@ class Fileset:
       years = defaultdict(list)
 
       def __init__(self, directory):
-            """Initialise Fileset object.
+            """
+            Initialise Fileset object.
 
             directory -- input directory path
             """
@@ -60,12 +62,15 @@ class Fileset:
 
 
       def getAll(self):
-            """Return all NAME files found in directory"""
+            """
+            Return all NAME files found in directory
+            """
             return self.files
 
 
       def between(self, start, stop):
-            """Return NAME files between two dates
+            """
+            Return NAME files between two dates
 
             start -- start date, YYYYMMDD format
             stop -- stop date, YYYYMMDD format
@@ -82,22 +87,24 @@ class Fileset:
 
 
       def getWeek(self, a):
-            """Return week number for given Arrow object
+            """
+            Return week number for given Arrow object
             a -- Arrow timestamp object
-           """
+            """
             return a.isocalendar()[1]
 
 
       def getMonth(self, a):
-            """Return month number for given Arrow object
+            """
+            Return month number for given Arrow object
             a -- Arrow timestamp object
             """
             return a.format('M')
 
 
       def getYear(self, a):
-            """Return year for given Arrow object
+            """
+            Return year for given Arrow object
             a -- Arrow timestamp object
             """
-
             return a.format('YYYY')

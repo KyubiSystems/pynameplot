@@ -22,13 +22,20 @@ from .geom import reproj
 from .util import shortname
 
 class Shape(object):
-    'Base class for shape derived from ESRI shapefile'
+    """
+    Class for Shapely geometry derived from ESRI shapefile
+    """
 
     shapefile = ""
     shortname = ""
 
-    # Initialise shape object from ESRI file at 'filename'
+
     def __init__(self, shapefile):
+        """
+        Initialise shape object from ESRI file
+        filename -- path to ESRI shapefile
+        """
+
         self.shapefile = shapefile
         
         if not os.path.isfile(self.shapefile):

@@ -30,7 +30,9 @@ from .shape import Shape
 
 
 class Name:
-    """Define and create NAME data storage object"""
+    """
+    Define and create NAME data storage object
+    """
 
     filename = ""
     timestamps = []  
@@ -38,9 +40,11 @@ class Name:
 
 
     def __init__(self, filename):
-        """Initialise NAME object
+        """
+        Initialise NAME object
 
-        filename -- path to NAME file"""
+        filename -- path to NAME file
+        """
 
         self.filename = filename
 
@@ -102,21 +106,27 @@ class Name:
 
 
     def add_range(self, ts):
-        """Sum given range of timestamp columns
+        """
+        Sum given range of timestamp columns
 
-        ts -- list of timestamp labels"""
+        ts -- list of timestamp labels
+        """
 
         self.data['subtotal'] = self.data[ts].sum(axis=1)
 
 
     def add_all(self):
-        """Sum all timestamp columns found in file"""
+        """
+        Sum all timestamp columns found in file
+        """
 
         self.data['subtotal'] = self.data[self.timestamps].sum(axis=1)
 
 
     def get_minmax(self):
-        """Get minimum and maximum concentration data values"""
+        """
+        Get minimum and maximum concentration data values
+        """
 
         # Flatten list of concentration values
         cl = self.data[self.timestamps].values.tolist()
@@ -132,16 +142,20 @@ class Name:
 
 
     def trimmed(self):
-        """Return only coordinate, subtotal columns"""
+        """
+        Return only coordinate, subtotal columns
+        """
 
         cols = [ 'subtotal' ]
         return self.data[cols]
 
         
     def get_cover(self, shapefile):
-        """Get covering factor value for input ESRI shapefile
+        """
+        Get covering factor value for input ESRI shapefile
 
-        shapefile -- Path to ESRI shape file"""
+        shapefile -- Path to ESRI shape file
+        """
 
         shape = Shape(shapefile)
 

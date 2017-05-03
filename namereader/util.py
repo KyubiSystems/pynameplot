@@ -16,7 +16,10 @@
 import os
 
 def shortname(filepath):
-    
+    """
+    Return short name for input file (basename minus extension)
+    filepath -- full path to input file
+    """
     return os.path.splitext(os.path.basename(filepath))[0]
 
 

@@ -24,7 +24,8 @@ from functools import partial
 
 # --------------------------------------
 def reproj(geom, lat1, lat2):
-    """reproject input geometry as equal area
+    """
+    reproject input geometry as equal area
     geom -- Shapely geometry
     lat1 -- reference latitude 1
     lat2 -- reference latitude 2
@@ -38,7 +39,8 @@ def reproj(geom, lat1, lat2):
 
 # --------------------------------------
 def coverfactor(geom, square, lat_min, lat_max):
-    """Calculate covering factor of ESRI shape over grid square.
+    """
+    Calculate covering factor of ESRI shape over grid square.
     Value is float in range 0.0 -- 1.0
 
     geom -- Shapely geometry
@@ -64,7 +66,8 @@ def coverfactor(geom, square, lat_min, lat_max):
 
 # --------------------------------------
 def gridsquare(coords):
-    """Generate list of coordinates for gridsquare
+    """
+    Generate list of coordinates for gridsquare
     coords -- 4-tuple of grid centre coords, dlongitude, dlatitude
     
     returns list of 4 (lon, lat) coords for grid corners
