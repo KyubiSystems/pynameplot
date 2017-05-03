@@ -38,28 +38,34 @@ shapelist = config['shapelist']  # Text file containing list of shapefiles
 infile = config['infile']  # Single input NAME file
 indir = config['indir']  # Directory containing input NAME files
 
-day = config['day']
-week = config['week']
-month = config['month']
-year = config['year']
+infile2 = config['infile2']   # Optional second input NAME file
+indir2 = config['indir2']    # Optional second directory containing input NAME files
+
+timestamp = config['timestamp']  # Plot data for given timestamp
+day = config['day']   # Plot data summed for given day
+week = config['week']   # Plot data summed for given week
+month = config['month']   # Plot data summed for given month
+year = config['year']    # Plot data summed for given year
 
 projection = config['projection']  # Map projection 
 
-lon_bounds = config['lon_bounds']  # Longitude bounds of plot
-lat_bounds = config['lat_bounds']  # Latitude bounds of plot
+lon_bounds = config['lon_bounds']  # (Long_min, Long_max) tuple: Longitude bounds of plot
+lat_bounds = config['lat_bounds']  # (Lat_min, Lat_max) tuple: Latitude bounds of plot
 
-lon_axis = config['lon_axis']  # Tuple for Lon tickmarks
-lat_axis = config['lat_axis']  # Tuple for Lat tickmarks
+lon_axis = config['lon_axis']  # (Lon1, Lon2, Lon3...) tuple: Lon scale tickmarks
+lat_axis = config['lat_axis']  # (Lat1, Lat2, Lat3...) tuple: Lat scale tickmarks
 
-scale = config['scale'] # (Min, Max) scale tuple for plotting values
+scale = config['scale'] # (Min, Max) scale tuple for plotting values, default is autoscale
 
 colormap = config['colormap']  # Colourmap name
 
 solid = config['solid']  # Set solid flag
+color1 = config['color1']   # Solid colour for dataset 1
+color2 = config['color2']   # Solid colour for dataset 2
 
-station = config['station']  # Station coordinates
+station = config['station']  # (Lon, Lat) tuple containing Station coordinates
 
-outfile = config['outfile']  # Output plot file name
+outfile = config['outfile']  # Output plot file name root
 
 # ------------------------------------
 
