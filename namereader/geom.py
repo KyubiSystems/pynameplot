@@ -23,9 +23,13 @@ import pyproj
 from functools import partial
 
 # --------------------------------------
-# reproject geometry as equal area
-
 def reproj(geom, lat1, lat2):
+    """reproject input geometry as equal area
+    geom -- Shapely geometry
+    lat1 -- reference latitude 1
+    lat2 -- reference latitude 2
+    """
+
     geom_proj = transform(
         partial(pyproj.transform, pyproj.Proj(init='EPSG:4326'), pyproj.Proj(proj='aea', lat1=lat1, lat2=lat2)), geom
     )    
@@ -33,9 +37,15 @@ def reproj(geom, lat1, lat2):
 
 
 # --------------------------------------
-# calculate covering factor of ESRI shape over grid square (float 0.0 -- 1.0)
-
 def coverfactor(geom, square, lat_min, lat_max):
+    """Calculate covering factor of ESRI shape over grid square.
+    Value is float in range 0.0 -- 1.0
+
+    geom -- Shapely geometry
+    square -- Shapely geometry of grid square
+    lat_min -- reference latitude 1
+    lat_max -- reference latitude 2
+    """
 
     # reproject grid square
     square_proj = reproj(square, lat_min, lat_max)
@@ -53,11 +63,13 @@ def coverfactor(geom, square, lat_min, lat_max):
     return cf
 
 # --------------------------------------
-# Generate list of coordinates for gridsquare
-# input 4-tuple of grid centre, dlongitude, dlatitude
-# return list of 4 coords for grid corners
-
 def gridsquare(coords):
+    """Generate list of coordinates for gridsquare
+    coords -- 4-tuple of grid centre coords, dlongitude, dlatitude
+    
+    returns list of 4 (lon, lat) coords for grid corners
+    """
+
     (lon, lat, dlon, dlat) = coords
     gs = [(lon - dlon/2., lat - dlat/2.), (lon - dlon/2., lat + dlat/2.), (lon + dlon/2., lat + dlat/2.), (lon + dlon/2., lat - dlat/2.)]
     return gs
