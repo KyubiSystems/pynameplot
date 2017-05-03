@@ -21,6 +21,7 @@ from collections import defaultdict
 from .name import Name
 from .util import shortname
 
+
 class Fileset:
       """
       Read directory of NAME files, 
@@ -60,13 +61,11 @@ class Fileset:
                   self.months[self.getMonth(d)].append(f)
                   self.years[self.getYear(d)].append(f)
 
-
       def getAll(self):
             """
             Return all NAME files found in directory
             """
             return self.files
-
 
       def between(self, start, stop):
             """
@@ -81,10 +80,9 @@ class Fileset:
             for f in self.files:
                   g = shortname(f)
                   d = arrow.get(g, 'YYYYMMDD')
-                  if (d >= a) and (d <=b):
+                  if (d >= a) and (d <= b):
                         result.append(f)
             return result
-
 
       def getWeek(self, a):
             """
@@ -93,14 +91,12 @@ class Fileset:
             """
             return a.isocalendar()[1]
 
-
       def getMonth(self, a):
             """
             Return month number for given Arrow object
             a -- Arrow timestamp object
             """
             return a.format('M')
-
 
       def getYear(self, a):
             """

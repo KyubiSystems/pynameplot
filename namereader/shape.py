@@ -21,6 +21,7 @@ from shapely.ops import cascaded_union
 from .geom import reproj
 from .util import shortname
 
+
 class Shape(object):
     """
     Class for Shapely geometry derived from ESRI shapefile
@@ -28,7 +29,6 @@ class Shape(object):
 
     shapefile = ""
     shortname = ""
-
 
     def __init__(self, shapefile):
         """
@@ -53,5 +53,5 @@ class Shape(object):
         self.lat_max = self.geo.bounds['maxy'].max()
 
         # reprojected geometry
-        self.proj_geo = [ reproj(g, self.lat_min, self.lat_max) for g in self.geo ]
+        self.proj_geo = [reproj(g, self.lat_min, self.lat_max) for g in self.geo]
         self.proj_cu = reproj(self.cu, self.lat_min, self.lat_max)

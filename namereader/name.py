@@ -38,7 +38,6 @@ class Name:
     timestamps = []  
     header = {}  
 
-
     def __init__(self, filename):
         """
         Initialise NAME object
@@ -75,7 +74,7 @@ class Name:
     
         # Set leader column names
         collist[1:4] = ['X-Index', 'Y-Index', 'Longitude', 'Latitude']
-        collist = [ x.strip() for x in collist ]
+        collist = [x.strip() for x in collist]
     
         # Get observation timestamp strings
         self.timestamps = collist[5::]
@@ -84,7 +83,7 @@ class Name:
         df.columns = collist[1::]
     
         # Drop leading rows
-        df = df.drop([0,1,2,3])
+        df = df.drop([0, 1, 2, 3])
     
         # Convert strings to floats where possible
         df = df.apply(lambda x: pd.to_numeric(x, errors='ignore'))
@@ -93,17 +92,16 @@ class Name:
         crs = {'init': 'epsg:4326'}
     
         # Generate Shapely Point objects for each grid point
-        #df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
+        # df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
     
         # Generate Shapely Polygons for grid squares
-        df['grid'] = [ Polygon(gridsquare(xy + self.grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
+        df['grid'] = [Polygon(gridsquare(xy + self.grid_size)) for xy in zip(df.Longitude, df.Latitude)]
     
         # Create GeoDataFrame with point and grid geometry columns
         self.data = gpd.GeoDataFrame(df, crs=crs, geometry=df['grid'])
 
         # Set lat/lon indices on data
         self.data.set_index(["Longitude", "Latitude"], inplace=True)
-
 
     def add_range(self, ts):
         """
@@ -114,14 +112,12 @@ class Name:
 
         self.data['subtotal'] = self.data[ts].sum(axis=1)
 
-
     def add_all(self):
         """
         Sum all timestamp columns found in file
         """
 
         self.data['subtotal'] = self.data[self.timestamps].sum(axis=1)
-
 
     def get_minmax(self):
         """
@@ -140,16 +136,14 @@ class Name:
         
         return (self.min_conc, self.max_conc)
 
-
     def trimmed(self):
         """
         Return only coordinate, subtotal columns
         """
 
-        cols = [ 'subtotal' ]
+        cols = ['subtotal']
         return self.data[cols]
 
-        
     def get_cover(self, shapefile):
         """
         Get covering factor value for input ESRI shapefile
@@ -161,4 +155,3 @@ class Name:
 
         # calculate covering factor column
         self.data[shape.shortname] = [coverfactor(shape.proj_geo, s, shape.lat_min, shape.lat_max) for s in self.data['grid']]
-        

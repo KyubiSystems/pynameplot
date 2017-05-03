@@ -16,6 +16,7 @@
 from .name import Name
 from .fileset import Fileset
 
+
 class Sum:
       """
       Class to sum over multiple NAME files
@@ -34,7 +35,6 @@ class Sum:
             self.directory = directory
             self.fs = Fileset(directory)
 
-
       def sumAll(self):
             """
             Add all NAME files in Fileset
@@ -42,7 +42,6 @@ class Sum:
 
             self.files = self.fs.getAll()
             self.__addFiles(self.files)
-
 
       def sumBetween(self, start, stop):
             """
@@ -54,7 +53,6 @@ class Sum:
             self.files = self.fs.between(start, stop)
             self.__addFiles(self.files)
 
-
       def sumWeek(self, w):
             """
             Add NAME files for given week number
@@ -63,7 +61,6 @@ class Sum:
 
             self.files = self.fs.weeks[w]
             self.__addFiles(self.files)
-
 
       def sumMonth(self, m):
             """
@@ -74,7 +71,6 @@ class Sum:
             self.files = self.fs.months[m]
             self.__addFiles(self.files)
 
-
       def sumYear(self, y):
             """
             Add NAME files for given year
@@ -83,7 +79,6 @@ class Sum:
 
             self.files = self.fs.years[y]
             self.__addFiles(self.files)
-
 
       def __addFiles(self, files):
             """
@@ -111,4 +106,3 @@ class Sum:
                   m = m.drop('subtotal', 1)
 
             return m
-

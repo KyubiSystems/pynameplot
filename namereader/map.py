@@ -29,7 +29,7 @@ from descartes import PolygonPatch
 import warnings
 warnings.filterwarnings("ignore")
 
-#--------------
+
 class Map(object):
 
     """
@@ -61,11 +61,10 @@ class Map(object):
         self.ax.set_aspect('equal')
 
         # set default projection to cylindrical
-        self.projection='cyl'
+        self.projection = 'cyl'
 
         # set default normalisation from name file extrema
-        self.norm = matplotlib.colors.LogNorm(vmin=self.name.min_conc, vmax = self.name.max_conc, clip=False)
-
+        self.norm = matplotlib.colors.LogNorm(vmin=self.name.min_conc, vmax=self.name.max_conc, clip=False)
 
     def setScale(self, conc):
         """
@@ -79,7 +78,6 @@ class Map(object):
 
         self.conc = conc
         self.norm = matplotlib.colors.LogNorm(vmin=self.conc[0], vmax=self.conc[1], clip=False)
-
 
     def setBounds(self, lon_range, lat_range):
         """
@@ -95,7 +93,6 @@ class Map(object):
         self.lon_range = lon_range
         self.lat_range = lat_range
 
-
     def setAxes(self, lon_axis, lat_axis):
         """
         Set map tick arrays in longitude and latitude.
@@ -110,7 +107,6 @@ class Map(object):
         self.lon_axis = lon_axis
         self.lat_axis = lat_axis
 
-
     def setProjection(self, projection):
         """
         Override default projection type.
@@ -120,8 +116,7 @@ class Map(object):
 
         self.projection = projection
 
-
-    #--------------------------------------------------------
+    # --------------------------------------------------------
     def drawBase(self):
         """
         Set up map projection
@@ -144,8 +139,7 @@ class Map(object):
 
         self.ax.set_title(filename, fontsize=10)
 
-
-    #--------------------------------------------------------
+    # --------------------------------------------------------
     def zoneLoad(self, files):
         """
         Load gepgraphic zones from list of ESRI shapefiles
@@ -171,7 +165,6 @@ class Map(object):
                         mpoly = transform(m, subpoly)
                         self.patches.append(PolygonPatch(mpoly))
                     
-
     def zoneColour(self, colours):
         """
         Set display colours for defined ESRI shapes
@@ -207,8 +200,7 @@ class Map(object):
         
         sq2 = self.ax.add_collection(pc2)
 
-
-    #--------------------------------------------------------
+    # --------------------------------------------------------
     def gridSetup(self):
         """
         Iterate over data cells defined in NAME 'grid' column
@@ -217,10 +209,9 @@ class Map(object):
 
         self.gpatches = []
         
-        for poly in self.name['grid']: # TODO: can we do this in parallel? Check operation of transform on columns
+        for poly in self.name['grid']:  # TODO: can we do this in parallel? Check operation of transform on columns
             mpoly = transform(self.m, poly)
             self.gpatches.append(PolygonPatch(mpoly))
-            
 
     def gridColormap(self, colormap=cm.rainbow):
         """
@@ -230,7 +221,6 @@ class Map(object):
         self.colormap = colormap
         self.gpc = PatchCollection(self.gpatches, cmap=self.colormap, norm=self.norm, match_original=True)
 
-
     def gridSolid(self, color='blue'):
         """
         Override colourmap with solid colour
@@ -239,7 +229,6 @@ class Map(object):
         self.solid = True
         self.gpc = PatchCollection(self.gpatches, match_original=True)
         self.gpc.set_facecolor(color)
-
 
     def gridDraw(self):
         """
@@ -253,14 +242,12 @@ class Map(object):
         if not self.solid:
             self.fig.colorbar(self.gpc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
 
-
-    #--------------------------------------------------------
+    # --------------------------------------------------------
     def addTimestamp(self):
         """
         Add timestamp to plot
         """
         self.fig.text(0.4, 0.15, self.column, color='white', transform=self.ax.transAxes)
-
 
     def addMarker(self, lon, lat):
         """
@@ -271,7 +258,6 @@ class Map(object):
         x, y = self.m(lon, lat)
         self.m.plot(x, y, 'kx', markersize=8, zorder=10)
 
-
     def saveFile(self, filename='plotname.png'):
         """
         Save plot output file
@@ -279,6 +265,4 @@ class Map(object):
         """
         self.fig.savefig(flename, dpi=300)
 
-
-    #--------------------------------------------------------
-
+    # --------------------------------------------------------

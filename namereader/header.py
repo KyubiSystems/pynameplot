@@ -15,23 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def loadheader(filename):
-    """Load NAME file and parse header lines into dict.
+    """
+    Load NAME file and parse header lines into dict.
     filename -- input NAME file
     """
     header = {}
     
     with open(filename, 'r') as f:
         
-        for line in range(1,19):
+        for line in range(1, 19):
             h = f.readline()
             
             if ":" in h:
-                (key, val) = h.split(":",1)
+                (key, val) = h.split(":", 1)
                 key = key.strip()
                 val = val.strip()
             
-                #print 'setting ' + key
                 header[key] = val
 
     return header

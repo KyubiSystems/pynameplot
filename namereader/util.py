@@ -15,6 +15,7 @@
 
 import os
 
+
 def shortname(filepath):
     """
     Return short name for input file (basename minus extension)
@@ -32,4 +33,3 @@ def merge_dicts(*dict_args):
     for dictionary in dict_args:
         result.update(dictionary)
     return result
-

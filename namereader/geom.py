@@ -22,7 +22,7 @@ import pyproj
 
 from functools import partial
 
-# --------------------------------------
+
 def reproj(geom, lat1, lat2):
     """
     reproject input geometry as equal area
@@ -64,6 +64,7 @@ def coverfactor(geom, square, lat_min, lat_max):
     
     return cf
 
+
 # --------------------------------------
 def gridsquare(coords):
     """
@@ -76,5 +77,3 @@ def gridsquare(coords):
     (lon, lat, dlon, dlat) = coords
     gs = [(lon - dlon/2., lat - dlat/2.), (lon - dlon/2., lat + dlat/2.), (lon + dlon/2., lat + dlat/2.), (lon + dlon/2., lat - dlat/2.)]
     return gs
-
-
