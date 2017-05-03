@@ -38,9 +38,9 @@ args = parser.parse_args()
 
 print 'Starting makemastergrid...'
 
-#namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename
-#shapelist = "europe_shapes.list"  # shapefile name/colour list
-#outfile = "PML.pickle2"  # output pickle
+# namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename
+# shapelist = "europe_shapes.list"  # shapefile name/colour list
+# outfile = "PML.pickle2"  # output pickle
 
 # ------------------------------------
 # Read list of shapefiles, colours
@@ -61,8 +61,8 @@ with open(args.shapelist, 'r') as shp:
             files.append(shapename)
             colors.append(colorname)
 
-shortnames = [ util.shortname(f) for f in files ]
-pcnames = [ 'pc_' + s for s in shortnames ]
+shortnames = [util.shortname(f) for f in files]
+pcnames = ['pc_' + s for s in shortnames]
 
 # ------------------------------------
 # Read NAME file header for grid parameters
@@ -95,12 +95,12 @@ for (colx, coly) in itertools.product(xcol, ycol):
 
 # ------------------------------------
 
-data = { 'Longitude': longitude, 'Latitude': latitude }
+data = {'Longitude': longitude, 'Latitude': latitude}
 df = pd.DataFrame(data)
 df = df[['Longitude', 'Latitude']]  # Set column order manually
 
 # Generate polygon geometry column
-df['grid'] = [ Polygon(geom.gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
+df['grid'] = [Polygon(geom.gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude)]
 
 print "Starting covering factor calculations..."
 

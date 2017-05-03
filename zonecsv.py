@@ -68,7 +68,7 @@ with open(args.outfile, 'w') as csvfile:
 
     # Generate zone column names
     shortnames = list(zones)[2::]
-    pc_cols = [ 'pc_' + s for s in shortnames ]
+    pc_cols = ['pc_' + s for s in shortnames]
     fieldnames = ['Timestamp'] + shortnames + pc_cols
 
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
@@ -99,12 +99,10 @@ with open(args.outfile, 'w') as csvfile:
                 sum_conc = sum(totals.values())
         
             for s in shortnames:
-                percents[ 'pc_' + s ] = (totals[s] / sum_conc) * 100.0   # Calculate zone percentages
+                percents['pc_' + s] = (totals[s] / sum_conc) * 100.0   # Calculate zone percentages
 
-                row = util.merge_dicts({ "Timestamp" : t }, totals, percents)
+                row = util.merge_dicts({"Timestamp": t}, totals, percents)
 
             writer.writerow(row)
 
 print "Done!"
-
-
