@@ -3,7 +3,7 @@
 # Configuration options for NAME plotting 'plotter.py'
 
 # input file paths
-shapelist = '/foo/bar/baz'  # Text file containing list of shapefiles
+shapelist = '/foo/bar/baz'  # Optional text file containing list of shapefiles & colours
 infile = ''  # Single input NAME file
 indir = ''  # Directory containing input NAME files
 
@@ -19,7 +19,7 @@ month = ''   # Plot data summed for given month
 year = ''    # Plot data summed for given year
 
 # map geometry
-projection = ''  # Map projection
+projection = ''  # Map projection, default 'cyl'
 lon_bounds = ''  # (Long_min, Long_max) tuple: Longitude bounds of plot
 lat_bounds = '' # (Lat_min, Lat_max) tuple: Latitude bounds of plot
 lon_axis = ''  # (Lon1, Lon2, Lon3...) tuple: Lon scale tickmarks
