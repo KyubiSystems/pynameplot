@@ -32,59 +32,97 @@ warnings.filterwarnings("ignore")
 #--------------
 class Map(object):
 
-    "NAME plot base class"
+    """Define and create a visualisation plot
+    from NAME concentration data
+    """
 
     lon_range = []
     lat_range = []
+    lon_axis = []
+    lat_axis = []
+
     conc = []
-    projection = 'cyl'  # default projection is cylindrical
 
-    def __init__(self, name):
+    def __init__(self, name, column='total'):
+        """Initialise Map object.
 
-        # 'name' must be a loaded Name object containing parsed data
+        name   -- a loaded Name object containing parsed data
+        column -- column name to plot. Default is 'total' column from summed file.
+
+        Default is to set auto-scale normalisation from 
+        extremal values of input data.
+        """
         
-        print 'Plotting figure...',
-
-        # initialise plot
+        self.name = name
+        self.column = column
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect('equal')
 
-    def autoScale(self):
+        # set default projection to cylindrical
+        self.projection='cyl'
+
         # set default normalisation from name file extrema
-        self.norm = matplotlib.colors.LogNorm(vmin=name.min_conc, vmax = name.max_conc, clip=False)
+        self.norm = matplotlib.colors.LogNorm(vmin=self.name.min_conc, vmax = self.name.max_conc, clip=False)
+
 
     def setScale(self, conc):
-        # set manual normalisation
+        """Set normalisation scale manually.
+
+        conc -- 2-tuple containing (min, max) values of concentration scale
+        """
+
         if not (len(conc) == 2):
             raise 'Invalid concentration range array'
 
         self.conc = conc
         self.norm = matplotlib.colors.LogNorm(vmin=self.conc[0], vmax=self.conc[1], clip=False)
 
+
     def setBounds(self, lon_range, lat_range):
-        # set map bounds (arrays)
+        """Set map latitude and longitude bounds.
+
+        lon_range -- 2-tuple containing (lon_min, lon_max)
+        lat_range -- 2-tuple containing (lat_min, lat_max)
+        """
+
         if not (len(lon_range) == 2 and len(lat_range) == 2):
             raise 'Invalid longitude/latitude range'
 
         self.lon_range = lon_range
         self.lat_range = lat_range
 
+
     def setAxes(self, lon_axis, lat_axis):
-        # set axis tick arrays
-        # TODO: should be a sensible default here?
+        """Set map tick arrays in longitude and latitude.
+
+        lon_axis -- list containing longitude tick mark values.
+        lat_axis -- list containing latitude tick mark values.
+        """
+
         if not (isinstance(lon_axis, list) and isinstance(lat_axis, list)):
             raise 'Invalid longitude/latitude axis array'
 
         self.lon_axis = lon_axis
         self.lat_axis = lat_axis
 
-    def setProjection(self, projection='cyl'):
-        # set projection (default is cylindrical)
+
+    def setProjection(self, projection):
+        """Override default projection type.
+
+        projection -- string giving projection type
+        """
+
         self.projection = projection
 
-    #--------------
+
+    #--------------------------------------------------------
     def drawBase(self):
-        # draw base map layers
+        """Set up map projection
+        Draw basic map layout including coastlines and boundaries
+        Draw lat-long grid
+        Set plot title from filename
+        """
+
         self.m = Basemap(llcrnrlon=self.lon_range[0], llcrnrlat=self.lat_range[0],
                          urcrnrlon=self.lon_range[1], urcrnrlat=self.lat_range[1],
                          projection=self.projection, lat_1=45., lat_2=55., lon_0=0.,
@@ -99,9 +137,13 @@ class Map(object):
 
         self.ax.set_title(filename, fontsize=10)
 
-    #--------------
+
+    #--------------------------------------------------------
     def zoneLoad(self, files):
-        # load zones from ESRI shapefiles
+        """Load gepgraphic zones from list of ESRI shapefiles
+        files -- list containing ESRI shapefiles
+        """
+
         self.patches = []
         
         if not (isinstance(files, list)):
@@ -121,8 +163,11 @@ class Map(object):
                         mpoly = transform(m, subpoly)
                         self.patches.append(PolygonPatch(mpoly))
                     
-    #-------------
+
     def zoneColour(self, colours):
+        """Set display colours for defined ESRI shapes
+        colours -- list containing HTML colour names
+        """
 
         self.colours = colours
 
@@ -139,6 +184,9 @@ class Map(object):
         sq = self.ax.add_collection(pc)
 
     def zoneLines(self, edgecolour='red'):        
+        """Set boundary colour for defined ESRI shapes
+        edgecolour -- HTML colour name for boundary
+        """
 
         pc2 = PatchCollection(self.patches, match_original=True)
         pc2.set_facecolor('none')
@@ -149,56 +197,70 @@ class Map(object):
         
         sq2 = self.ax.add_collection(pc2)
 
-    #--------------
+
+    #--------------------------------------------------------
     def gridSetup(self):
-        # set up data grid
+        """Iterate over data cells defined in NAME 'grid' column
+        and add them to PolygonPatch list for plotting
+        """
 
         self.gpatches = []
         
         for poly in self.name['grid']: # TODO: can we do this in parallel? Check operation of transform on columns
-            mpoly = transform(m, poly)
+            mpoly = transform(self.m, poly)
             self.gpatches.append(PolygonPatch(mpoly))
             
-    #--------------
-    def gridColormap(self, colormap=cm.rainbow):
-        # set colourmap with predefined normalisation
 
-        self.colormap=colormap
+    def gridColormap(self, colormap=cm.rainbow):
+        """Set colourmap with existing normalisation
+        colormap -- Matplotlib colourmap name
+        """
+        self.colormap = colormap
         self.gpc = PatchCollection(self.gpatches, cmap=self.colormap, norm=self.norm, match_original=True)
 
-    def gridSolid(self, colour='blue'):
-        # set solid colour
 
+    def gridSolid(self, color='blue'):
+        """Override colourmap with solid colour
+        color -- HTML colour
+        """
+        self.solid = True
         self.gpc = PatchCollection(self.gpatches, match_original=True)
-        self.gpc.set_facecolor(colour)
+        self.gpc.set_facecolor(color)
 
-    def setColumn(self, column='sum'):
-        # TODO: check if column exists in name object
-        self.column=column
 
-    #--------------        
     def gridDraw(self):
-
+        """Draw data column values on map
+        Add colourbar to plot where plot is not solid type
+        """
         self.gpc.set_edgecolor('none')
         self.gpc.set_zorder(6)
         self.gpc.set(array=self.name[self.column])
         gsq = self.ax.add_collection(self.gpc)
-        self.fig.colorbar(self.gpc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
+        if not self.solid:
+            self.fig.colorbar(self.gpc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
 
-    #--------------
+
+    #--------------------------------------------------------
     def addTimestamp(self):
-
+        """Add timestamp to plot"""
         self.fig.text(0.4, 0.15, self.column, color='white', transform=self.ax.transAxes)
 
-    #--------------
+
     def addMarker(self, lon, lat):
-        # plot site marker
+        """Add marker to plot at station coordinates
+        lon -- station longitude
+        lat -- station latitude
+        """
         x, y = self.m(lon, lat)
         self.m.plot(x, y, 'kx', markersize=8, zorder=10)
 
-    #--------------
-    def saveFile(self, filename='plotname.png'):
 
+    def saveFile(self, filename='plotname.png'):
+        """Save plot output file
+        filename -- output file including type extension
+        """
         self.fig.savefig(flename, dpi=300)
 
-    #--------------
+
+    #--------------------------------------------------------
+
