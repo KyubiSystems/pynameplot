@@ -90,7 +90,7 @@ outfile = config.get('outfile')  # Output plot file name root
 # read NAME data into object
 
 if infile:
-    n = namereader.Name(infile)
+    n = name.Name(infile)
     if timestamp:
         n.column = timestamp
     else:
@@ -99,7 +99,7 @@ if infile:
 
 
 elif indir:
-    s = namereader.Sum(indir)
+    s = namesum.Sum(indir)
     if day:
         pass
     elif week:
@@ -117,7 +117,7 @@ else:
     exit
 
 # Create Map object from NAME data
-m = namereader.Map(n)
+m = namemap.Map(n)
 
 # Set projection if defined, otherwise cylindrical
 if projection:

@@ -1,1 +1,1 @@
-__all__ = [ 'fileset', 'geom', 'header', 'map', 'name', 'shape', 'sum', 'util' ]
+__all__ = [ 'fileset', 'geom', 'header', 'namemap', 'name', 'shape', 'namesum', 'util' ]
