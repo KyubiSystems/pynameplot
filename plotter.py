@@ -98,19 +98,23 @@ if infile:
         n.column = 'total'
 
 
-else if indir:
+elif indir:
     s = namereader.Sum(indir)
     if day:
         pass
-    else if week:
+    elif week:
         n = s.weeks[week]
-    else if month:
+    elif month:
         n = s.months[month]
-    else if year:
+    elif year:
         n = s.years[year]
     else:
-        throw 'Unrecognised or undefined timespan'
+        raise ValueError('Unrecognised or undefined timespan')
         exit
+
+else:
+    throw 'No input file or directory defined'
+    exit
 
 # Create Map object from NAME data
 m = namereader.Map(n)
@@ -123,14 +127,15 @@ if projection:
 if lon_range and lat_range:
     m.setBounds(lon_range, lat_range)
 else:
-    throw 'Unrecognised or undefined map bounds lon_range, lat_range'
+    raise ValueError('Unrecognised or undefined map bounds lon_range, lat_range')
     exit
 
 # Set map axis 
 if lon_axis and lat_axis:
     m.setAxes(lon_axis, lat_axis)
 else:
-    throw 'Unrecognised or undefined map axes lon_axis, lat_axis'
+    raise ValueError('Unrecognised or undefined map axes lon_axis, lat_axis')
+    exit
 
 # Set scale if defined, otherwise autoscale
 if scale:
