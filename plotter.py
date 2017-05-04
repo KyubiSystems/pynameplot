@@ -113,7 +113,7 @@ elif indir:
         exit
 
 else:
-    throw 'No input file or directory defined'
+    raise ValueError('No input file or directory defined')
     exit
 
 # Create Map object from NAME data
