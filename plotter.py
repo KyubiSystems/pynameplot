@@ -22,6 +22,17 @@ from configobj import ConfigObj
 # local NAME libraries
 from namereader import *
 
+"""
+- plotter.py -
+
+Read named configuration file
+Load input NAME file, or subset of NAME files in directory
+Set plot parameters
+Load NAME data into grid geometry
+Plot grid on Basemap
+Save output to disk
+"""
+
 # ------------------------------------
 
 parser = argparse.ArgumentParser(prog='plotter', description='Plot NAME concentration files on world map')
@@ -75,14 +86,84 @@ outfile = config['outfile']  # Output plot file name root
 
 # ------------------------------------
 
+
 # read NAME data into object
-n = namereader.Name(infile)
+
+if infile:
+    n = namereader.Name(infile)
+    if timestamp:
+        n.column = timestamp
+    else:
+        n.sum_all()
+        n.column = 'total'
+
+
+else if indir:
+    s = namereader.Sum(indir)
+    if day:
+        pass
+    else if week:
+        n = s.weeks[week]
+    else if month:
+        n = s.months[month]
+    else if year:
+        n = s.years[year]
+    else:
+        throw 'Unrecognised or undefined timespan'
+        exit
 
 # Create Map object from NAME data
-m = namereader.Map(name)
+m = namereader.Map(n)
 
-if not scale:
-    m.autoScale()
+# Set projection if defined, otherwise cylindrical
+if projection:
+    m.setProjection(projection)
+
+# Set map bounds 
+if lon_range and lat_range:
+    m.setBounds(lon_range, lat_range)
 else:
+    throw 'Unrecognised or undefined map bounds lon_range, lat_range'
+    exit
+
+# Set map axis 
+if lon_axis and lat_axis:
+    m.setAxes(lon_axis, lat_axis)
+else:
+    throw 'Unrecognised or undefined map axes lon_axis, lat_axis'
+
+# Set scale if defined, otherwise autoscale
+if scale:
     (scale_min, scale_max) = scale
     m.setScale(scale_min, scale_max)
+
+# Set up data grid
+m.gridSetup()
+
+# Check for solid colouring flag
+if solid:
+    if color1:
+        m.gridSolid(color=color1)
+    else:
+        m.gridSolid()
+
+# Set colourmap
+if colormap:
+    m.gridColormap(colormap)
+else:
+    m.gridColormap()
+
+# Draw gridded values
+m.gridDraw()
+m.addTimestamp()
+
+# Add station marker if defined
+if station:
+    (station_lon, station_lat) = station
+    m.addMarker(station_lon, station_lat)
+
+# Save output to disk
+if outfile:
+    m.saveFile(filename=outfile)
+else:
+    m.saveFile()
