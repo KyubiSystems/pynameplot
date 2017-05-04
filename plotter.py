@@ -33,8 +33,6 @@ Plot grid on Basemap
 Save output to disk
 """
 
-# ------------------------------------
-
 parser = argparse.ArgumentParser(prog='plotter', description='Plot NAME concentration files on world map')
 parser.add_argument("-c", "--config", help="Configuration file", required=True)
 
@@ -45,44 +43,46 @@ args = parser.parse_args()
 
 config = ConfigObj(args.config, raise_errors=True, list_values=True)
 
+# Reading configuration values
+
 # input path
-shapelist = config['shapelist']  # Text file containing list of shapefiles
-infile = config['infile']  # Single input NAME file
-indir = config['indir']  # Directory containing input NAME files
+shapelist = config.get('shapelist') # Text file containing list of shapefiles
+infile = config.get('infile') # Single input NAME file
+indir = config.get('indir')  # Directory containing input NAME files
 
 # secondary input path
-infile2 = config['infile2']   # Optional second input NAME file
-indir2 = config['indir2']    # Optional second directory containing input NAME files
+infile2 = config.get('infile2')   # Optional second input NAME file
+indir2 = config.get('indir2')    # Optional second directory containing input NAME files
 
 # time select
-timestamp = config['timestamp']  # Plot data for given timestamp
-day = config['day']   # Plot data summed for given day
-week = config['week']   # Plot data summed for given week
-month = config['month']   # Plot data summed for given month
-year = config['year']    # Plot data summed for given year
+timestamp = config.get('timestamp')  # Plot data for given timestamp
+day = config.get('day')   # Plot data summed for given day
+week = config.get('week')   # Plot data summed for given week
+month = config.get('month')   # Plot data summed for given month
+year = config.get('year')    # Plot data summed for given year
 
 # map geometry
-projection = config['projection']  # Map projection 
-lon_bounds = config['lon_bounds']  # (Long_min, Long_max) tuple: Longitude bounds of plot
-lat_bounds = config['lat_bounds']  # (Lat_min, Lat_max) tuple: Latitude bounds of plot
-lon_axis = config['lon_axis']  # (Lon1, Lon2, Lon3...) tuple: Lon scale tickmarks
-lat_axis = config['lat_axis']  # (Lat1, Lat2, Lat3...) tuple: Lat scale tickmarks
+projection = config.get('projection')  # Map projection 
+lon_bounds = config.get('lon_bounds')  # (Long_min, Long_max) tuple: Longitude bounds of plot
+lat_bounds = config.get('lat_bounds')  # (Lat_min, Lat_max) tuple: Latitude bounds of plot
+lon_axis = config.get('lon_axis')  # (Lon1, Lon2, Lon3...) tuple: Lon scale tickmarks
+lat_axis = config.get('lat_axis')  # (Lat1, Lat2, Lat3...) tuple: Lat scale tickmarks
 
 # map colour
-scale = config['scale'] # (Min, Max) scale tuple for plotting values, default is autoscale
+scale = config.get('scale') # (Min, Max) scale tuple for plotting values, default is autoscale
 
-colormap = config['colormap']  # Colourmap name
+colormap = config.get('colormap')  # Colourmap name
 
-solid = config['solid']  # Set solid flag
-color1 = config['color1']   # Solid colour for dataset 1
-color2 = config['color2']   # Solid colour for dataset 2
+solid = config.get('solid')  # Set solid flag
+color1 = config.get('color1')   # Solid colour for dataset 1
+color2 = config.get('color2')   # Solid colour for dataset 2
 
 # map labelling
-station = config['station']  # (Lon, Lat) tuple containing Station coordinates
-caption = config['caption']  # Primary caption for output plot
+station = config.get('station')  # (Lon, Lat) tuple containing Station coordinates
+caption = config.get('caption')  # Primary caption for output plot
 
 # output file
-outfile = config['outfile']  # Output plot file name root
+outfile = config.get('outfile')  # Output plot file name root
 
 # ------------------------------------
 
