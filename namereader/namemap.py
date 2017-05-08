@@ -216,12 +216,12 @@ class Map(object):
             mpoly = transform(self.m, poly)
             self.gpatches.append(PolygonPatch(mpoly))
 
-    def gridColormap(self, colormap=cm.rainbow):
+    def gridColormap(self, colormap='rainbow'):
         """
         Set colourmap with existing normalisation
         colormap -- Matplotlib colourmap name
         """
-        self.colormap = colormap
+        self.colormap = getattr(cm, colormap)
         self.gpc = PatchCollection(self.gpatches, cmap=self.colormap, norm=self.norm, match_original=True)
 
     def gridSolid(self, color='blue'):

@@ -20,10 +20,10 @@ timestamp = '26/04/2015 00:00 UTC'  # Plot data for given timestamp
 
 # map geometry
 # projection = ''  # Map projection, default 'cyl'
-lon_bounds = [-30., 20.]  # (Long_min, Long_max) tuple: Longitude bounds of plot
-lat_bounds = [40., 70.] # (Lat_min, Lat_max) tuple: Latitude bounds of plot
-lon_axis = [-20., -10., 0., 10]  # (Lon1, Lon2, Lon3...) tuple: Lon scale tickmarks
-lat_axis = [45., 50., 55., 60., 65.]  # (Lat1, Lat2, Lat3...) tuple: Lat scale tickmarks
+lon_bounds = -30., 20.  # (Long_min, Long_max) tuple: Longitude bounds of plot
+lat_bounds = 40., 70. # (Lat_min, Lat_max) tuple: Latitude bounds of plot
+lon_axis = -20., -10., 0., 10.  # (Lon1, Lon2, Lon3...) tuple: Lon scale tickmarks
+lat_axis = 45., 50., 55., 60., 65.  # (Lat1, Lat2, Lat3...) tuple: Lat scale tickmarks
 
 # map colour
 # scale = '' # (Min, Max) scale tuple for plotting values, default is autoscale
@@ -35,7 +35,7 @@ lat_axis = [45., 50., 55., 60., 65.]  # (Lat1, Lat2, Lat3...) tuple: Lat scale t
 # color2 = ''   # Solid colour for dataset 2
 
 # map labelling
-station = (-4.1931, 50.3189)  # (Lon, Lat) tuple containing Station coordinates     
+station = -4.1931, 50.3189  # (Lon, Lat) tuple containing Station coordinates     
 # caption = ''  # Primary caption for output plot
 
 # output file

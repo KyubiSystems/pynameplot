@@ -135,7 +135,9 @@ else:
 
 # Set map axis 
 if lon_axis and lat_axis:
-    m.setAxes(lon_axis, lat_axis)
+    lon = [float(i) for i in lon_axis]
+    lat = [float(i) for i in lat_axis]
+    m.setAxes(lon, lat)
 else:
     raise ValueError('Unrecognised or undefined map axes lon_axis, lat_axis')
     exit
