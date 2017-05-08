@@ -141,11 +141,13 @@ class Name:
         Get minimum and maximum non-zero concentration values for given column
         """
         
+        print 'Checking column:', column
+        
         # Flatten list of concentration values
         cl = self.data[column].values.tolist()
 
         # Get minimum (non-zero) concentration value in column
-        self.min_conc - min([x for x in cl if x > 0.0])
+        self.min_conc = min([x for x in cl if x > 0.0])
 
         # Get maximum concentration value in column
         self.max_conc = self.data[column].values.max()

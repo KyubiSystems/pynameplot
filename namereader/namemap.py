@@ -212,7 +212,7 @@ class Map(object):
 
         self.gpatches = []
         
-        for poly in self.name['grid']:  # TODO: can we do this in parallel? Check operation of transform on columns
+        for poly in self.name.data['grid']:  # TODO: can we do this in parallel? Check operation of transform on columns
             mpoly = transform(self.m, poly)
             self.gpatches.append(PolygonPatch(mpoly))
 

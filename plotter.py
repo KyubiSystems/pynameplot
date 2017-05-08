@@ -92,16 +92,19 @@ outfile = config.get('outfile')  # Output plot file name root
 if infile:
     n = name.Name(infile)
     if timestamp:
-        n.column = timestamp
+        column = timestamp
     else:
         n.sum_all()
-        n.column = 'total'
+        column = 'total'
 
 
 elif indir:
     s = namesum.Sum(indir)
+    column = 'total'
+
     if day:
-        pass
+        print 'not yet implemented'
+        exit;
     elif week:
         n = s.weeks[week]
     elif month:
@@ -117,15 +120,15 @@ else:
     exit
 
 # Create Map object from NAME data
-m = namemap.Map(n)
+m = namemap.Map(n, column=column)
 
 # Set projection if defined, otherwise cylindrical
 if projection:
     m.setProjection(projection)
 
 # Set map bounds 
-if lon_range and lat_range:
-    m.setBounds(lon_range, lat_range)
+if lon_bounds and lat_bounds:
+    m.setBounds(lon_bounds, lat_bounds)
 else:
     raise ValueError('Unrecognised or undefined map bounds lon_range, lat_range')
     exit
@@ -143,6 +146,7 @@ if scale:
     m.setScale(scale_min, scale_max)
 
 # Set up data grid
+m.drawBase()
 m.gridSetup()
 
 # Check for solid colouring flag
