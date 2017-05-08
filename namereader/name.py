@@ -121,7 +121,7 @@ class Name:
 
     def get_minmax(self):
         """
-        Get minimum and maximum concentration data values
+        Get minimum and maximum non-zero concentration data values for entire dataset
         """
 
         # Flatten list of concentration values
@@ -135,6 +135,23 @@ class Name:
         self.max_conc = self.data[self.timestamps].values.max()
         
         return (self.min_conc, self.max_conc)
+
+    def get_minmax(self, column):
+        """
+        Get minimum and maximum non-zero concentration values for given column
+        """
+        
+        # Flatten list of concentration values
+        cl = self.data[column].values.tolist()
+
+        # Get minimum (non-zero) concentration value in column
+        self.min_conc - min([x for x in cl if x > 0.0])
+
+        # Get maximum concentration value in column
+        self.max_conc = self.data[column].values.max()
+        
+        return (self.min_conc, self.max_conc)
+
 
     def trimmed(self):
         """

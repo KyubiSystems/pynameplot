@@ -63,6 +63,9 @@ class Map(object):
         # set default projection to cylindrical
         self.projection = 'cyl'
 
+        # set concentration range from given column
+        self.name.get_minmax(column)
+
         # set default normalisation from name file extrema
         self.norm = matplotlib.colors.LogNorm(vmin=self.name.min_conc, vmax=self.name.max_conc, clip=False)
 
