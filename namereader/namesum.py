@@ -17,10 +17,11 @@ from .name import Name
 from .fileset import Fileset
 
 
-class Sum:
+class Sum(Name):
       """
       Class to sum over multiple NAME files
       Generates result in 'total' column
+      Extends existing Name class
       """
       
       directory = ''
@@ -40,7 +41,7 @@ class Sum:
             Add all NAME files in Fileset
             """
 
-            self.files = self.fs.getAll()
+            self.files = sorted(self.fs.getAll())
             self.__addFiles(self.files)
 
       def sumBetween(self, start, stop):
@@ -50,7 +51,7 @@ class Sum:
             stop -- stop date (YYYYMMDD format)
             """
 
-            self.files = self.fs.between(start, stop)
+            self.files = sorted(self.fs.between(start, stop))
             self.__addFiles(self.files)
 
       def sumWeek(self, w):
@@ -59,7 +60,7 @@ class Sum:
             w -- ISO-8601 week number
             """
 
-            self.files = self.fs.weeks[w]
+            self.files = sorted(self.fs.weeks[w])
             self.__addFiles(self.files)
 
       def sumMonth(self, m):
@@ -68,7 +69,7 @@ class Sum:
             m -- month number
             """
             
-            self.files = self.fs.months[m]
+            self.files = sorted(self.fs.months[m])
             self.__addFiles(self.files)
 
       def sumYear(self, y):
@@ -77,7 +78,7 @@ class Sum:
             y -- year
             """
 
-            self.files = self.fs.years[y]
+            self.files = sorted(self.fs.years[y])
             self.__addFiles(self.files)
 
       def __addFiles(self, files):
@@ -86,7 +87,8 @@ class Sum:
             Tagged as private method
             files -- list of input NAME files
             """
-            
+
+            print 'Loading: ', files[0]
             n = Name(files[0])
             n.add_all()
 
@@ -99,10 +101,11 @@ class Sum:
                   n2.add_all()
                   m2 = n2.trimmed()
 
-                  m = m.join(m2, how='outer')
+                  #m = m.join(m2, how='outer')
+                  m = m.combine_first(m2)
                   m = m.fillna(0)
 
                   m.total = m.total + m.subtotal
                   m = m.drop('subtotal', 1)
 
-            return m
+            self.data = m

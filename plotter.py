@@ -78,7 +78,6 @@ color1 = config.get('color1')   # Solid colour for dataset 1
 color2 = config.get('color2')   # Solid colour for dataset 2
 
 # map labelling
-station = config.get('station')  # (Lon, Lat) tuple containing Station coordinates
 caption = config.get('caption')  # Primary caption for output plot
 
 # output file
@@ -104,16 +103,18 @@ elif indir:
 
     if day:
         print 'not yet implemented'
-        exit;
+        exit();
     elif week:
-        n = s.weeks[week]
+        s.sumWeek(week)
     elif month:
-        n = s.months[month]
+        s.sumMonth(month)
     elif year:
-        n = s.years[year]
+        s.sumYear(year)
     else:
         raise ValueError('Unrecognised or undefined timespan')
-        exit
+        exit()
+    
+    n = s
 
 else:
     raise ValueError('No input file or directory defined')
@@ -126,29 +127,33 @@ m = namemap.Map(n, column=column)
 if projection:
     m.setProjection(projection)
 
-# Set map bounds 
+# Set map bounds from config file, otherwise scale by grid file
 if lon_bounds and lat_bounds:
     m.setBounds(lon_bounds, lat_bounds)
 else:
-    raise ValueError('Unrecognised or undefined map bounds lon_range, lat_range')
-    exit
+    m.setBounds(n.lon_bounds, n.lat_bounds)
 
-# Set map axis 
+# Set map axes from config file, else scale by grid file
 if lon_axis and lat_axis:
     lon = [float(i) for i in lon_axis]
     lat = [float(i) for i in lat_axis]
     m.setAxes(lon, lat)
 else:
-    raise ValueError('Unrecognised or undefined map axes lon_axis, lat_axis')
-    exit
+    m.setAxes(n.lon_grid, n.lat_grid)
 
-# Set scale if defined, otherwise autoscale
+# Set scale if defined, otherwise standard scale
+# set other option for autoscale?
 if scale:
     (scale_min, scale_max) = scale
     m.setScale(scale_min, scale_max)
+else:
+    m.setScale((5.0e-9, 1.0e-4))
 
 # Set up data grid
-m.drawBase()
+if caption:
+    m.drawBase(caption)
+else:
+    m.drawBase(n.caption, fontsize=8)
 m.gridSetup()
 
 # Check for solid colouring flag
@@ -158,8 +163,8 @@ if solid:
     else:
         m.gridSolid()
 
-# Set colourmap
-if colormap:
+# Plot using colormap
+elif colormap:
     m.gridColormap(colormap)
 else:
     m.gridColormap()
@@ -168,10 +173,13 @@ else:
 m.gridDraw()
 m.addTimestamp()
 
-# Add station marker if defined
-if station:
-    (station_lon, station_lat) = station
-    m.addMarker(station_lon, station_lat)
+# Add station markers 1-6 if defined
+station_list = ['station1', 'station2', 'station3', 'station4', 'station5', 'station6']
+for station_name in station_list:
+    station = config.get(station_name)
+    if station:
+        (station_lon, station_lat) = station
+        m.addMarker(station_lon, station_lat)
 
 # Save output to disk
 if outfile:

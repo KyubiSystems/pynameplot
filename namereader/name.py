@@ -60,7 +60,71 @@ class Name:
         # get grid size from header
         delta_lon = float(self.header['X grid resolution'])
         delta_lat = float(self.header['Y grid resolution'])
+        
+        lon_0 = float(self.header['X grid origin'])
+        lat_0 = float(self.header['Y grid origin'])
+
+        lon_size = int(self.header['X grid size'])
+        lat_size = int(self.header['Y grid size'])
+
+        mlon = (delta_lon*lon_size)
+        mlat = (delta_lat*lat_size)
+
+        lon_1 = lon_0+mlon
+        lat_1 = lat_0+mlat
+
+        self.lon_bounds=(lon_0, lon_1)
+        self.lat_bounds=(lat_0, lat_1)
+
         self.grid_size = (delta_lon, delta_lat)
+
+        if mlon>60.0:
+            steplon=20
+        elif mlon>30.0:
+            steplon=10
+        else:
+            steplon=5
+
+        if mlat>60.0:
+            steplat=20
+        elif mlat>30.0:
+            steplat=10
+        else:
+            steplat=5
+
+        self.lon_grid=np.arange(lon_0, lon_1, steplon).tolist()
+        self.lat_grid=np.arange(lat_0, lat_1, steplat).tolist()
+
+        # Store header parameters as member variables
+        self.runname = self.header['Run name']
+        self.release = self.header['Start of release']
+        self.endrelease = self.header['End of release']
+
+        fields = pd.read_csv(self.filename, header=19, nrows=14)
+        fields.drop(fields.columns[[0,1,2,3]], axis=1, inplace=True)
+        field1 = fields[fields.columns[[0]]]
+        self.ave = field1[6::1].values[0][0].strip()
+        if self.ave.startswith('5day'):
+            self.averaging = '5 day'
+        elif self.ave.startswith('1day'):
+            self.averaging = '1 day'
+        else:
+            self.averaging = ''
+
+        self.alt = field1[13::1].values[0][0].strip()
+        if 'Z = 50.0' in self.alt:
+            self.altitude = '0-100m'
+        elif 'Z = 500.0' in self.alt:
+            self.altitude = '100-1000m'
+        else:
+            self.altitude = ''
+
+        if self.endrelease > self.release:
+            self.direction = 'Forwards'
+        else:
+            self.direction = 'Backwards'
+
+        self.caption = '{} {} {} {} start of release: {}'.format(self.runname, self.averaging, self.altitude, self.direction, self.release)
 
         # read CSV portion of NAME file into pandas DataFrame
         df = pd.read_csv(self.filename, header=31)
@@ -160,7 +224,7 @@ class Name:
         Return only coordinate, subtotal columns
         """
 
-        cols = ['subtotal']
+        cols = ['grid', 'subtotal']
         return self.data[cols]
 
     def get_cover(self, shapefile):

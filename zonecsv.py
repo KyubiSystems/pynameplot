@@ -17,6 +17,7 @@
 
 import argparse
 import pandas as pd
+import numpy as np
 import csv
 from namereader import *
 
@@ -34,6 +35,8 @@ group2.add_argument("-m", "--month", help="Select NAME files from Month number")
 group2.add_argument("-y", "--year", help="Select NAME files from Year")
 
 args = parser.parse_args()
+
+print '+++ Starting zonecsv... +++'
 
 # namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename 
 # pklfile = 'PML_master.pkl'  # input master grid file
@@ -74,6 +77,13 @@ with open(args.outfile, 'w') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
     writer.writeheader()
 
+    if 'grid' in zones.columns:
+        zones = zones.drop('grid', 1)
+
+    if 'geometry' in zones.columns:
+        zones = zones.drop('geometry', 1)
+
+
     for n in sorted(files):
 
         # Instantiate NAME object from file
@@ -82,26 +92,18 @@ with open(args.outfile, 'w') as csvfile:
         namedata = namefile.data
         print "Loaded NAME file %s..." % n
 
+        foo = namedata.join(zones, how='inner')
+
         for t in timestamps:
             print "Processing time %s..." % t
 
-            totals = {}
-            percents = {}
-            sum_conc = 0.0
+            totals = {s: (foo[s] * foo[t]).sum() for s in shortnames}
 
-            d = namedata[t]
-
-            for s in shortnames:
-
-                z = zones[s]
-                totals[s] = (d * z).sum()   # lat/lon indexed multiplication 
-                
-                sum_conc = sum(totals.values())
+            sum_conc = sum(totals.values())
         
-            for s in shortnames:
-                percents['pc_' + s] = (totals[s] / sum_conc) * 100.0   # Calculate zone percentages
+            percents = {'pc_'+s: (totals[s] / sum_conc) * 100.0 for s in shortnames}
 
-                row = util.merge_dicts({"Timestamp": t}, totals, percents)
+            row = util.merge_dicts({"Timestamp": t}, totals, percents)
 
             writer.writerow(row)
 

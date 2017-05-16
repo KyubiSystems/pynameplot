@@ -18,6 +18,7 @@
 import argparse
 import numpy as np
 import pandas as pd
+import geopandas as gpd
 import itertools
 
 from shapely import speedups
@@ -36,11 +37,11 @@ parser.add_argument("-s", "--shapelist", help='File containing list of input sha
 parser.add_argument("-o", "--outfile", help='Output master grid file name', required=True)
 args = parser.parse_args()
 
-print 'Starting makemastergrid...'
+print '+++ Starting makemastergrid... +++'
 
-# namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename
-# shapelist = "europe_shapes.list"  # shapefile name/colour list
-# outfile = "PML.pickle2"  # output pickle
+#namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename
+#shapelist = "europe_shapes.list"  # shapefile name/colour list
+#outfile = "PML.pickle2"  # output pickle
 
 # ------------------------------------
 # Read list of shapefiles, colours
@@ -61,8 +62,8 @@ with open(args.shapelist, 'r') as shp:
             files.append(shapename)
             colors.append(colorname)
 
-shortnames = [util.shortname(f) for f in files]
-pcnames = ['pc_' + s for s in shortnames]
+shortnames = [ util.shortname(f) for f in files ]
+pcnames = [ 'pc_' + s for s in shortnames ]
 
 # ------------------------------------
 # Read NAME file header for grid parameters
@@ -95,12 +96,23 @@ for (colx, coly) in itertools.product(xcol, ycol):
 
 # ------------------------------------
 
-data = {'Longitude': longitude, 'Latitude': latitude}
+data = { 'Longitude': longitude, 'Latitude': latitude }
 df = pd.DataFrame(data)
 df = df[['Longitude', 'Latitude']]  # Set column order manually
 
+# Generate grid lat-long index for subsequent matching
+# print 'Generating Lat-Long index...',
+# df.set_index(['Longitude', 'Latitude'], drop=False, inplace=True)
+# print 'done.'
+
 # Generate polygon geometry column
-df['grid'] = [Polygon(geom.gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude)]
+df['grid'] = [ Polygon(geom.gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
+
+# Set mapping coordinate for GeoDataFrame
+crs = {'init': u'epsg:4326'}
+
+# Create GeoDataFrame
+gd = gpd.GeoDataFrame(df, crs=crs, geometry=df['grid'])
 
 print "Starting covering factor calculations..."
 
@@ -108,22 +120,32 @@ print "Starting covering factor calculations..."
 for f in files:
 
     shp = shape.Shape(f)
-
     print "Processing zone %s..." % shp.shortname
 
-    # calculate covering factor column
-    df[shp.shortname] = [geom.coverfactor(shp.proj_geo, s, shp.lat_min, shp.lat_max) for s in df['grid']]
+    cover = gpd.sjoin(gd, shp.data, how='inner', op='intersects')
+
+    cover[shp.shortname] = [geom.coverfactor(shp.proj_cu, s, shp.lat_min, shp.lat_max) for s in cover['grid']]
+
+    c2 = cover[shp.shortname]
+
+    if not c2.index.is_unique:
+
+        print "Removing duplicate index for %s" % shp.shortname
+        c2 = c2[~c2.index.duplicated(keep='first')]
 
 
-print "Writing output file %s..." % args.outfile
+    gd = gd.join(c2)
 
-# Generate grid lat-long index for subsequent matching
-df.set_index(['Longitude', 'Latitude'], inplace=True)
+# Replacing NaNs
+gd = gd.fillna(0)
+
+gd = gd.set_index(['Longitude', 'Latitude'])
 
 # Set sparse to reduce on-disk filesize
-df = df.to_sparse(fill_value=0)
+gd = gd.to_sparse(fill_value=0)
 
 # Write pickle file
-df.to_pickle(args.outfile)
+print "Writing output file %s..." % args.outfile
+gd.to_pickle(args.outfile)
 
-print "Done!"
+print "=== Done! ==="

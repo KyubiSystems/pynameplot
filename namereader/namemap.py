@@ -59,6 +59,7 @@ class Map(object):
         self.column = column
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect('equal')
+        self.solid = False
 
         # set default projection to cylindrical
         self.projection = 'cyl'
@@ -77,7 +78,7 @@ class Map(object):
         """
 
         if not (len(conc) == 2):
-            raise 'Invalid concentration range array'
+            raise ValueError('Invalid concentration range array')
 
         self.conc = conc
         self.norm = matplotlib.colors.LogNorm(vmin=self.conc[0], vmax=self.conc[1], clip=False)
@@ -91,7 +92,7 @@ class Map(object):
         """
 
         if not (len(lon_range) == 2 and len(lat_range) == 2):
-            raise 'Invalid longitude/latitude range'
+            raise ValueError('Invalid longitude/latitude range')
 
         self.lon_range = lon_range
         self.lat_range = lat_range
@@ -105,7 +106,7 @@ class Map(object):
         """
 
         if not (isinstance(lon_axis, list) and isinstance(lat_axis, list)):
-            raise 'Invalid longitude/latitude axis array'
+            raise ValueError('Invalid longitude/latitude axis array')
 
         self.lon_axis = lon_axis
         self.lat_axis = lat_axis
@@ -120,7 +121,7 @@ class Map(object):
         self.projection = projection
 
     # --------------------------------------------------------
-    def drawBase(self):
+    def drawBase(self, caption, fontsize=10):
         """
         Set up map projection
         Draw basic map layout including coastlines and boundaries
@@ -133,14 +134,14 @@ class Map(object):
                          projection=self.projection, lat_1=45., lat_2=55., lon_0=0.,
                          resolution='l', area_thresh=1000.)
         
-        self.m.drawcoastlines(color='white', zorder=8)
+        self.m.drawcoastlines(color='white', linewidth=0.6, zorder=8)
         self.m.drawcountries(color='white', zorder=8)
         self.m.drawmapboundary(fill_color='#444444')
         self.m.fillcontinents(color='#bbbbbb', lake_color='#444444')
-        self.m.drawparallels(self.lat_axis, linewidth=0.5, color='white', labels=[1, 0, 0, 1], zorder=8)
-        self.m.drawmeridians(self.lon_axis, linewidth=0.5, color='white', labels=[1, 0, 0, 1], zorder=8)
+        self.m.drawparallels(self.lat_axis, linewidth=0.3, color='white', labels=[1, 0, 0, 1], zorder=8, fontsize=5)
+        self.m.drawmeridians(self.lon_axis, linewidth=0.3, color='white', labels=[1, 0, 0, 1], zorder=8, fontsize=5)
 
-        self.ax.set_title(filename, fontsize=10)
+        self.ax.set_title(caption, fontsize=fontsize)
 
     # --------------------------------------------------------
     def zoneLoad(self, files):
@@ -240,10 +241,10 @@ class Map(object):
         """
         self.gpc.set_edgecolor('none')
         self.gpc.set_zorder(6)
-        self.gpc.set(array=self.name[self.column])
+        self.gpc.set(array=self.name.data[self.column])
         gsq = self.ax.add_collection(self.gpc)
         if not self.solid:
-            self.fig.colorbar(self.gpc, label=r'Concentration (g s/m$^3$)', shrink=0.7)
+            self.fig.colorbar(self.gpc, label=r'Concentration (g s/m$^3$)', shrink=0.5)
 
     # --------------------------------------------------------
     def addTimestamp(self):
@@ -259,13 +260,13 @@ class Map(object):
         lat -- station latitude
         """
         x, y = self.m(lon, lat)
-        self.m.plot(x, y, 'kx', markersize=8, zorder=10)
+        self.m.plot(x, y, 'kx', markersize=4, zorder=10)
 
     def saveFile(self, filename='plotname.png'):
         """
         Save plot output file
         filename -- output file including type extension
         """
-        self.fig.savefig(flename, dpi=300)
+        self.fig.savefig(filename, dpi=300)
 
     # --------------------------------------------------------
