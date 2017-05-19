@@ -212,8 +212,11 @@ class Map(object):
         """
 
         self.gpatches = []
-        self.gpatches = [PolygonPatch(transform(self.m, poly)) for poly in self.name.data['grid']]
         
+        for poly in self.name.data['grid']:  # TODO: can we do this in parallel? Check operation of transform on columns
+            mpoly = transform(self.m, poly)
+            self.gpatches.append(PolygonPatch(mpoly))
+
     def gridColormap(self, colormap='rainbow'):
         """
         Set colourmap with existing normalisation

@@ -158,6 +158,7 @@ m.gridSetup()
 
 # Check for solid colouring flag
 if solid:
+    m.solid = True
     if color1:
         m.gridSolid(color=color1)
     else:
@@ -166,11 +167,13 @@ if solid:
 # Plot using colormap
 elif colormap:
     m.gridColormap(colormap)
+    m.gridDraw()
 else:
     m.gridColormap()
+    m.gridDraw()
 
 # Draw gridded values
-m.gridDraw()
+
 m.addTimestamp()
 
 # Add station markers 1-6 if defined

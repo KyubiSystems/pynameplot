@@ -31,7 +31,7 @@ timestamp = '26/04/2015 00:00 UTC'  # Plot data for given timestamp
 # colormap = ''  # Colourmap name
 
 solid = 'True'  # Set solid flag
-# color1 = 'Blue'   # Solid colour for dataset 1
+color1 = 'yellow'   # Solid colour for dataset 1
 # color2 = ''   # Solid colour for dataset 2
 
 # map labelling
@@ -39,6 +39,6 @@ station1 = -4.1931, 50.3189  # (Lon, Lat) tuple containing Station coordinates
 # caption = ''  # Primary caption for output plot
 
 # output file
-outfile = 'plotter_output_solid2.png'  # Output plot file name root
+outfile = 'plotter_output_solid3.png'  # Output plot file name root
 
 # ------------------------------------       
