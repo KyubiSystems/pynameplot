@@ -155,9 +155,6 @@ class Name:
         # Set mapping coordinate for GeoDataFrame
         crs = {'init': 'epsg:4326'}
     
-        # Generate Shapely Point objects for each grid point
-        # df['points'] = [ Point(xy) for xy in zip(df.Longitude, df.Latitude) ]
-    
         # Generate Shapely Polygons for grid squares
         df['grid'] = [Polygon(gridsquare(xy + self.grid_size)) for xy in zip(df.Longitude, df.Latitude)]
     

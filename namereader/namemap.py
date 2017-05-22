@@ -20,10 +20,13 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from matplotlib.collections import PatchCollection
+import arrow
 
 from shapely.ops import transform
 from shapely.geometry import Point, Polygon
 from descartes import PolygonPatch
+
+import os
 
 # suppress matplotlib/basemap warnings
 import warnings
@@ -60,6 +63,23 @@ class Map(object):
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect('equal')
         self.solid = False
+
+        self.outdir = ''
+
+        # get root of input NAME filename
+        base = os.path.basename(self.name.filename)
+        base = os.path.splitext(base)[0]
+
+        # construct default output plot filename with time suffix
+        if self.column == 'total':
+            suffix = 'sum_day'
+        else:
+            a = arrow.get(self.column, 'DD/MM/YYYY HH:mm')
+            suffix = a.format('HHmm')
+            if self.name.direction == 'Forwards':
+                suffix = a.shift(hours=-3).format('HHmm')
+
+        self.filename = '{}_{}.png'.format(base, suffix)
 
         # set default projection to cylindrical
         self.projection = 'cyl'
@@ -143,12 +163,12 @@ class Map(object):
                          projection=self.projection, lat_1=45., lat_2=55., lon_0=0.,
                          resolution='l', area_thresh=1000.)
         
-        self.m.drawcoastlines(color='white', linewidth=0.6, zorder=8)
-        self.m.drawcountries(color='white', zorder=8)
+        self.m.drawcoastlines(color='white', linewidth=0.6, zorder=14)
+        self.m.drawcountries(color='white', zorder=14)
         self.m.drawmapboundary(fill_color='#444444')
         self.m.fillcontinents(color='#bbbbbb', lake_color='#444444')
-        self.m.drawparallels(self.lat_axis, linewidth=0.3, color='white', labels=[1, 0, 0, 1], zorder=8, fontsize=5)
-        self.m.drawmeridians(self.lon_axis, linewidth=0.3, color='white', labels=[1, 0, 0, 1], zorder=8, fontsize=5)
+        self.m.drawparallels(self.lat_axis, linewidth=0.3, color='white', labels=[1, 0, 0, 1], zorder=14, fontsize=5)
+        self.m.drawmeridians(self.lon_axis, linewidth=0.3, color='white', labels=[1, 0, 0, 1], zorder=14, fontsize=5)
 
         self.ax.set_title(caption, fontsize=fontsize)
 
@@ -289,11 +309,14 @@ class Map(object):
         x, y = self.m(lon, lat)
         self.m.plot(x, y, 'kx', markersize=4, zorder=10)
 
-    def saveFile(self, filename='plotname.png'):
+    def saveFile(self, filename=self.filename):
         """
         Save plot output file
         filename -- output file including type extension
         """
+        if self.outdir:
+            filename = os.path.join(self.outdir, filename)
+
         self.fig.savefig(filename, dpi=300)
 
     # --------------------------------------------------------

@@ -16,6 +16,7 @@
 # limitations under the License.
 
 import argparse
+import os
 
 from configobj import ConfigObj
 
@@ -185,6 +186,12 @@ for station_name in station_list:
     if station:
         (station_lon, station_lat) = station
         m.addMarker(station_lon, station_lat)
+
+# If output directory does not exist, create it
+if outdir:
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+    m.outdir = outdir
 
 # Save output to disk
 if outfile:
