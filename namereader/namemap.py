@@ -205,45 +205,62 @@ class Map(object):
         sq2 = self.ax.add_collection(pc2)
 
     # --------------------------------------------------------
-    def gridSetup(self):
-        """
-        Iterate over data cells defined in NAME 'grid' column
-        and add them to PolygonPatch list for plotting
-        """
-
-        self.gpatches = []
-        self.gpatches = [PolygonPatch(transform(self.m, poly)) for poly in self.name.data['grid']]
-        
-    def gridColormap(self, colormap='rainbow'):
+    def setColormap(self, colormap='rainbow'):
         """
         Set colourmap with existing normalisation
         colormap -- Matplotlib colourmap name
         """
         self.colormap = getattr(cm, colormap)
-        self.gpc = PatchCollection(self.gpatches, cmap=self.colormap, norm=self.norm, match_original=True)
 
-    def gridSolid(self, color='blue'):
+    def drawSolid(self, column, color='blue', zorder=6):
         """
-        Override colourmap with solid colour
+        Draw solid shape showing extent of conc > 0.0
         color -- HTML colour
         """
         self.solid = True
-        self.gpc = PatchCollection(self.gpatches, match_original=True)
-        self.gpc.set_facecolor(color)
-        self.gpc.set_edgecolor('none')
-        self.gpc.set_zorder(6)
-        
-        gsq = self.ax.add_collection(self.gpc)
 
-    def gridDraw(self):
+        mesh = self.name.data[column]
+        mesh1 = mesh.loc[mesh > 0.0]
+
+        mesh2 = mesh1.unstack(level=1)
+        mesh2 = mesh2.fillna(0)
+
+        lons = mesh2.index.get_level_values('Longitude')
+        lats = mesh2.columns
+
+        mesh2 = mesh2.transpose()
+
+        mesh2[mesh2 > 0] = 1.0
+        mesh3 = mesh2.mask(mesh2 > 0)
+
+        x,y = self.m(lons, lats)
+
+        cmap = matplotlib.colors.ListedColormap([color])
+        norm = matplotlib.colors.LogNorm(vmin=0.99, vmax=1.0, clip=False)
+
+        self.m.pcolormesh(x, y, mesh3, norm=norm, cmap=cmap, zorder=zorder)
+
+
+    def drawMesh(self, column, zorder=6):
         """
         Draw data column values on map
         Add colourbar to plot where plot is not solid type
         """
-        self.gpc.set_edgecolor('none')
-        self.gpc.set_zorder(6)
-        self.gpc.set(array=self.name.data[self.column])
-        gsq = self.ax.add_collection(self.gpc)
+        mesh = self.name.data[column]
+        mesh1 = mesh.loc[mesh > 0.0]
+
+        mesh2 = mesh1.unstack(level=1)
+        mesh2 = mesh2.fillna(0)
+
+        lons = mesh2.index.get_level_values('Longitude')
+        lats = mesh2.columns
+
+        mesh2 = mesh2.transpose()
+
+        x,y = self.m(lons, lats)
+
+        self.m.pcolormesh(x, y, mesh2, cmap=self.cmap, norm=self.norm, zorder=zorder)
+
         if not self.solid:
             self.fig.colorbar(self.gpc, label=r'Concentration (g s/m$^3$)', shrink=0.5)
 

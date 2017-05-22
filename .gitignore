@@ -1,6 +1,7 @@
 virtualenv*
 venv.geo
 *~
+*.pkl
 *.pyc
 PML*
 *NAME_output
