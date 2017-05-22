@@ -100,12 +100,15 @@ class Map(object):
 
         self.norm = matplotlib.colors.LogNorm(vmin=conc[0], vmax=conc[1], clip=False)
 
-    def setAutoScale(self, column=self.column):
+    def setAutoScale(self, column=None):
         """
         Set autoscale normalisation.
 
         column -- Name of data column to extract (min, max) values for scale normalisagtion
         """
+
+        if column is None:
+            column = self.column
 
         self.name.get_minmax(column)
 
@@ -288,10 +291,10 @@ class Map(object):
 
         x,y = self.m(lons, lats)
 
-        self.m.pcolormesh(x, y, mesh2, cmap=self.cmap, norm=self.norm, zorder=zorder)
+        pc = self.m.pcolormesh(x, y, mesh2, cmap=self.colormap, norm=self.norm, zorder=zorder)
 
         if not self.solid:
-            self.fig.colorbar(self.gpc, label=r'Concentration (g s/m$^3$)', shrink=0.5)
+            self.fig.colorbar(pc, label=r'Concentration (g s/m$^3$)', shrink=0.5)
 
     # --------------------------------------------------------
     def addTimestamp(self):
@@ -309,11 +312,14 @@ class Map(object):
         x, y = self.m(lon, lat)
         self.m.plot(x, y, 'kx', markersize=4, zorder=10)
 
-    def saveFile(self, filename=self.filename):
+    def saveFile(self, filename=None):
         """
         Save plot output file
         filename -- output file including type extension
         """
+        if filename is None:
+            filename = self.filename
+
         if self.outdir:
             filename = os.path.join(self.outdir, filename)
 

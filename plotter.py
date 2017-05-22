@@ -42,6 +42,9 @@ args = parser.parse_args()
 # ------------------------------------
 # Configuration options
 
+if not os.path.isfile(args.config):
+    exit('*** ERROR: Configuration file {} not found!'.format(args.config))
+
 config = ConfigObj(args.config, raise_errors=True, list_values=True)
 
 # Reading configuration values
@@ -165,17 +168,17 @@ else:
 if solid:
     m.solid = True
     if color1:
-        m.drawSolid(color=color1)
+        m.drawSolid(column, color=color1)
     else:
-        m.drawSolid()
+        m.drawSolid(column)
 
 # Plot using colormap
 elif colormap:
     m.setColormap(colormap)
-    m.drawMesh()
+    m.drawMesh(column)
 else:
     m.setColormap()
-    m.drawMesh()
+    m.drawMesh(column)
 
 # m.addTimestamp()
 
