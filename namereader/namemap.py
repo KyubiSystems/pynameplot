@@ -64,15 +64,13 @@ class Map(object):
         # set default projection to cylindrical
         self.projection = 'cyl'
 
-        # set concentration range from given column
-        self.name.get_minmax(column)
+        # set default fixed scale normalisation for output plot
+        self.setFixedScale()
 
-        # set default normalisation from name file extrema
-        self.norm = matplotlib.colors.LogNorm(vmin=self.name.min_conc, vmax=self.name.max_conc, clip=False)
 
-    def setScale(self, conc):
+    def setFixedScale(self, conc=(5.e-9, 1.e-4)):
         """
-        Set normalisation scale manually.
+        Set fixed scale normalisation manually.
 
         conc -- 2-tuple containing (min, max) values of concentration scale
         """
@@ -80,8 +78,19 @@ class Map(object):
         if not (len(conc) == 2):
             raise ValueError('Invalid concentration range array')
 
-        self.conc = conc
-        self.norm = matplotlib.colors.LogNorm(vmin=self.conc[0], vmax=self.conc[1], clip=False)
+        self.norm = matplotlib.colors.LogNorm(vmin=conc[0], vmax=conc[1], clip=False)
+
+    def setAutoScale(self, column=self.column):
+        """
+        Set autoscale normalisation.
+
+        column -- Name of data column to extract (min, max) values for scale normalisagtion
+        """
+
+        self.name.get_minmax(column)
+
+        # set default normalisation from name file extrema
+        self.norm = matplotlib.colors.LogNorm(vmin=self.name.min_conc, vmax=self.name.max_conc, clip=False)
 
     def setBounds(self, lon_range, lat_range):
         """

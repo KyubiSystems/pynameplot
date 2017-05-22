@@ -160,21 +160,19 @@ m.gridSetup()
 if solid:
     m.solid = True
     if color1:
-        m.gridSolid(color=color1)
+        m.drawSolid(color=color1)
     else:
-        m.gridSolid()
+        m.drawSolid()
 
 # Plot using colormap
 elif colormap:
-    m.gridColormap(colormap)
-    m.gridDraw()
+    m.setColormap(colormap)
+    m.drawMesh()
 else:
-    m.gridColormap()
-    m.gridDraw()
+    m.setColormap()
+    m.drawMesh()
 
-# Draw gridded values
-
-m.addTimestamp()
+# m.addTimestamp()
 
 # Add station markers 1-6 if defined
 station_list = ['station1', 'station2', 'station3', 'station4', 'station5', 'station6']
