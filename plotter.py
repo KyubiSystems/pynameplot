@@ -62,23 +62,27 @@ month = config.get('month')   # Plot data summed for given month
 year = config.get('year')    # Plot data summed for given year
 
 # map geometry
-projection = config.get('projection')  # Map projection 
+projection = config.get('projection')  # Map projection, default is 'cyl' (Cylindrical)
 lon_bounds = config.get('lon_bounds')  # (Long_min, Long_max) tuple: Longitude bounds of plot
 lat_bounds = config.get('lat_bounds')  # (Lat_min, Lat_max) tuple: Latitude bounds of plot
 lon_axis = config.get('lon_axis')  # (Lon1, Lon2, Lon3...) tuple: Lon scale tickmarks
 lat_axis = config.get('lat_axis')  # (Lat1, Lat2, Lat3...) tuple: Lat scale tickmarks
 
 # map colour
-scale = config.get('scale') # (Min, Max) scale tuple for plotting values, default is autoscale
+scale = config.get('scale') # (Min, Max) scale tuple for plotting values, default is (5e-9, 1e-4)
+autoscale = config.get('autoscale') # Set flag for scaling colormap by min/max data values
 
-colormap = config.get('colormap')  # Colourmap name
+colormap = config.get('colormap')  # Matplotlib colormap name to be used for data, default is 'rainbow'
 
-solid = config.get('solid')  # Set solid flag
+solid = config.get('solid')  # Set flag for solid region plotting
 color1 = config.get('color1')   # Solid colour for dataset 1
 color2 = config.get('color2')   # Solid colour for dataset 2
 
 # map labelling
 caption = config.get('caption')  # Primary caption for output plot
+
+# output directory
+outdir = config.get('outdir')  # Output directory for plot files, create if does not exist
 
 # output file
 outfile = config.get('outfile')  # Output plot file name root
@@ -145,16 +149,16 @@ else:
 # set other option for autoscale?
 if scale:
     (scale_min, scale_max) = scale
-    m.setScale(scale_min, scale_max)
-else:
-    m.setScale((5.0e-9, 1.0e-4))
+    m.setFixedScale(scale_min, scale_max)
+elif autoscale:
+    m.setAutoScale(column)
 
 # Set up data grid
 if caption:
     m.drawBase(caption)
 else:
     m.drawBase(n.caption, fontsize=8)
-m.gridSetup()
+
 
 # Check for solid colouring flag
 if solid:
