@@ -108,7 +108,7 @@ elif indir:
     column = 'total'
 
     if day:
-        s.sumDay(day):
+        s.sumDay(day)
         if not caption:
             caption = "{} {} {} {}: {}{}{} day sum".format(s.runname, s.averaging, s.altitude, s.direction, s.year, s.month, s.day)
         if not outfile:
@@ -119,14 +119,14 @@ elif indir:
         if not caption:
             caption = "{} {} {} {}: {} week {} sum". format(s.runname, s.averaging, s.altitude, s.direction, s.year, week)
         if not outfile:
-            outfile = "{}_{}{}_weekly.png".format(s.runnname, s.year, week)
+            outfile = "{}_{}{}_weekly.png".format(s.runnname, s.year, week.zfill(2))
 
     elif month:
         s.sumMonth(month)
         if not caption:
             caption = "{} {} {} {}: {} month {} sum". format(s.runname, s.averaging, s.altitude, s.direction, s.year, month)
         if not outfile:
-            outfile = "{}_{}{}_monthly.png".format(s.runname, s.year, month)
+            outfile = "{}_{}{}_monthly.png".format(s.runname, s.year, month.zfill(2))
 
     elif year:
         s.sumYear(year)

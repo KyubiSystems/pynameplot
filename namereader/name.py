@@ -114,8 +114,8 @@ class Name:
 
         a = arrow.get(self.filename, 'YYYYMMDD')
         self.year = a.format('YYYY')
-        self.month = a.format('MM')
-        self.day = a.format('DD')
+        self.month = a.format('MM').zfill(2)
+        self.day = a.format('DD').zfill(2)
             
         self.alt = field1[13::1].values[0][0].strip()
         if 'Z = 50.0' in self.alt:

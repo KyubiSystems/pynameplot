@@ -15,7 +15,7 @@ indir = 'PML_NAME_output/'  # Directory containing input NAME files
 # timestamp = '26/04/2015 00:00 UTC'  # Plot data for given timestamp
 # day = ''   # Plot data summed for given day
 # week = ''   # Plot data summed for given week
-month = '5'   # Plot data summed for given month
+month = '6'   # Plot data summed for given month
 # year = ''    # Plot data summed for given year
 
 # map geometry
