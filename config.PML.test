@@ -12,7 +12,7 @@ infile = 'PML_NAME_output/low5dayPML_20150501.txt'  # Single input NAME file
 # indir2 = ''    # Optional second directory containing input NAME files
 
 # time select
-timestamp = '26/04/2015 00:00 UTC'  # Plot data for given timestamp
+timestamp = '26/04/2015 03:00 UTC'  # Plot data for given timestamp
 # day = ''   # Plot data summed for given day
 # week = ''   # Plot data summed for given week
 # month = ''   # Plot data summed for given month
@@ -39,6 +39,6 @@ station1 = -4.1931, 50.3189  # (Lon, Lat) tuple containing Station coordinates
 # caption = ''  # Primary caption for output plot
 
 # output file
-outfile = 'plotter_output2.png'  # Output plot file name root
+# outfile = 'plotter_output2.png'  # Output plot file name root
 
 # ------------------------------------       

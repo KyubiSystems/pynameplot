@@ -92,6 +92,12 @@ class Sum(Name):
             n = Name(files[0])
             n.add_all()
 
+            # Load Sum object metadata from first Name file found
+            self.runname = n.runname
+            self.averaging = n.averaging
+            self.altitude = n.altitude
+            self.direction = n.direction
+
             m = n.trimmed()
             m = m.rename(columns={'subtotal': 'total'})
 
