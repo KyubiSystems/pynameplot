@@ -28,9 +28,8 @@ from namereader import *
 
 Read named configuration file
 Load input NAME file, or subset of NAME files in directory
-Set plot parameters
-Load NAME data into grid geometry
-Plot grid on Basemap
+Set plot extent, normalisatiom, colormap, caption
+Plot data mesh on Basemap
 Save output to disk
 """
 
@@ -104,7 +103,6 @@ if infile:
         n.sum_all()
         column = 'total'
 
-
 elif indir:
     s = namesum.Sum(indir)
     column = 'total'
@@ -114,10 +112,13 @@ elif indir:
         exit();
     elif week:
         s.sumWeek(week)
+        caption = "{} {} {} {}: summed week {}". format(s.runname, s.averaging, s.altitude, s.direction, week)
     elif month:
         s.sumMonth(month)
+        caption = "{} {} {} {}: summed month {}". format(s.runname, s.averaging, s.altitude, s.direction, month)
     elif year:
         s.sumYear(year)
+        caption = "{} {} {} {}: summed year {}". format(s.runname, s.averaging, s.altitude, s.direction, year)
     else:
         raise ValueError('Unrecognised or undefined timespan')
         exit()
