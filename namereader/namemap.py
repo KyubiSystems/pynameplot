@@ -310,7 +310,7 @@ class Map(object):
         lat -- station latitude
         """
         x, y = self.m(lon, lat)
-        self.m.plot(x, y, 'kx', markersize=4, zorder=10)
+        self.m.plot(x, y, 'kx', markersize=4, zorder=15)
 
     def saveFile(self, filename=None):
         """
