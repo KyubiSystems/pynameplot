@@ -172,7 +172,7 @@ elif autoscale:
 
 # Set up data grid
 if caption:
-    m.drawBase(caption)
+    m.drawBase(caption, fontsize=8)
 else:
     m.drawBase(n.caption, fontsize=8)
 
