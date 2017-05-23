@@ -97,6 +97,8 @@ class Sum(Name):
             self.averaging = n.averaging
             self.altitude = n.altitude
             self.direction = n.direction
+            self.lon_bounds = n.lon_bounds
+            self.lat_bounds = n.lat_bounds
 
             m = n.trimmed()
             m = m.rename(columns={'subtotal': 'total'})
