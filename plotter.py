@@ -112,13 +112,25 @@ elif indir:
         exit();
     elif week:
         s.sumWeek(week)
-        caption = "{} {} {} {}: summed week {}". format(s.runname, s.averaging, s.altitude, s.direction, week)
+        if not caption:
+            caption = "{} {} {} {}: summed week {}". format(s.runname, s.averaging, s.altitude, s.direction, week)
+        if not outfile:
+            outfile = "{}_sum_week_{}.png".format(s.runnname, week)
+
     elif month:
         s.sumMonth(month)
-        caption = "{} {} {} {}: summed month {}". format(s.runname, s.averaging, s.altitude, s.direction, month)
+        if not caption:
+            caption = "{} {} {} {}: summed month {}". format(s.runname, s.averaging, s.altitude, s.direction, month)
+        if not outfile:
+            outfile = "{}_sum_month_{}.png".format(s.runname, month)
+
     elif year:
         s.sumYear(year)
-        caption = "{} {} {} {}: summed year {}". format(s.runname, s.averaging, s.altitude, s.direction, year)
+        if not caption:
+            caption = "{} {} {} {}: summed year {}". format(s.runname, s.averaging, s.altitude, s.direction, year)
+        if not outfile:
+            outfile = "{}_sum_year_{}.png".format(s.runname, year)
+
     else:
         raise ValueError('Unrecognised or undefined timespan')
         exit()
