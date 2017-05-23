@@ -108,28 +108,32 @@ elif indir:
     column = 'total'
 
     if day:
-        print 'not yet implemented'
-        exit();
+        s.sumDay(day):
+        if not caption:
+            caption = "{} {} {} {}: {}{}{} day sum".format(s.runname, s.averaging, s.altitude, s.direction, s.year, s.month, s.day)
+        if not outfile:
+            outfile = "{}_{}{}{}_daily.png".format(s.runname, s.year, s.month, s.day)
+        
     elif week:
         s.sumWeek(week)
         if not caption:
-            caption = "{} {} {} {}: summed week {}". format(s.runname, s.averaging, s.altitude, s.direction, week)
+            caption = "{} {} {} {}: {} week {} sum". format(s.runname, s.averaging, s.altitude, s.direction, s.year, week)
         if not outfile:
-            outfile = "{}_sum_week_{}.png".format(s.runnname, week)
+            outfile = "{}_{}{}_weekly.png".format(s.runnname, s.year, week)
 
     elif month:
         s.sumMonth(month)
         if not caption:
-            caption = "{} {} {} {}: summed month {}". format(s.runname, s.averaging, s.altitude, s.direction, month)
+            caption = "{} {} {} {}: {} month {} sum". format(s.runname, s.averaging, s.altitude, s.direction, s.year, month)
         if not outfile:
-            outfile = "{}_sum_month_{}.png".format(s.runname, month)
+            outfile = "{}_{}{}_monthly.png".format(s.runname, s.year, month)
 
     elif year:
         s.sumYear(year)
         if not caption:
-            caption = "{} {} {} {}: summed year {}". format(s.runname, s.averaging, s.altitude, s.direction, year)
+            caption = "{} {} {} {}: {} year sum". format(s.runname, s.averaging, s.altitude, s.direction, year)
         if not outfile:
-            outfile = "{}_sum_year_{}.png".format(s.runname, year)
+            outfile = "{}_{}_yearly.png".format(s.runname, year)
 
     else:
         raise ValueError('Unrecognised or undefined timespan')

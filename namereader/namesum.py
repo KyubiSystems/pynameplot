@@ -101,7 +101,10 @@ class Sum(Name):
             self.lat_bounds = n.lat_bounds
             self.lon_grid = n.lon_grid
             self.lat_grid = n.lat_grid
-
+            self.year = n.year
+            self.month = n.month
+            self.day = n.day
+            
             m = n.trimmed()
             m = m.rename(columns={'subtotal': 'total'})
 

@@ -17,6 +17,7 @@
 import numpy as np
 import pandas as pd
 import geopandas as gpd
+import arrow
 
 from shapely import speedups
 from shapely.geometry import Point, Polygon
@@ -111,6 +112,11 @@ class Name:
         else:
             self.averaging = ''
 
+        a = arrow.get(self.filename, 'YYYYMMDD')
+        self.year = a.format('YYYY')
+        self.month = a.format('MM')
+        self.day = a.format('DD')
+            
         self.alt = field1[13::1].values[0][0].strip()
         if 'Z = 50.0' in self.alt:
             self.altitude = '0-100m'
