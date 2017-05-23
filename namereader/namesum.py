@@ -99,6 +99,8 @@ class Sum(Name):
             self.direction = n.direction
             self.lon_bounds = n.lon_bounds
             self.lat_bounds = n.lat_bounds
+            self.lon_grid = n.lon_grid
+            self.lat_grid = n.lat_grid
 
             m = n.trimmed()
             m = m.rename(columns={'subtotal': 'total'})
