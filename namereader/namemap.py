@@ -14,6 +14,7 @@
 # limitations under the License.
 
 # plotting libraries
+import numpy as np
 from mpl_toolkits.basemap import Basemap
 import matplotlib
 matplotlib.use('Agg')
@@ -161,10 +162,25 @@ class Map(object):
         Set plot title from filename
         """
 
-        self.m = Basemap(llcrnrlon=self.lon_range[0], llcrnrlat=self.lat_range[0],
-                         urcrnrlon=self.lon_range[1], urcrnrlat=self.lat_range[1],
-                         projection=self.projection, lat_1=45., lat_2=55., lon_0=0.,
-                         resolution='l', area_thresh=1000.)
+        # Cylindrical projection (default)
+        if self.projection == 'cyl':
+            a = np.linspace(self.lat_range[0], self.lat_range[1],4)
+
+            self.m = Basemap(llcrnrlon=self.lon_range[0], llcrnrlat=self.lat_range[0],
+                             urcrnrlon=self.lon_range[1], urcrnrlat=self.lat_range[1],
+                             projection=self.projection, lat_1=a[1], lat_2=a[2], lon_0=0.,
+                             resolution='l', area_thresh=1000.)
+
+        # North Polar Stereographic
+        elif self.projection == 'npstere':
+            self.m = Basemap(projection=self.projection, boundinglat=self.lat_range[0], lon_0=self.lon_range[0], resolution='l')
+
+        # South Polar Stereographic
+        elif self.projection == 'spstere':
+            self.m = Basemap(projection=self.projection, boundinglat=self.lat_range[0], lon_0=self.lon_range[0], resolution='l')
+
+        else:
+            exit('Unsupported projection! Try cyl|npstere|spstere')
         
         self.m.drawcoastlines(color='white', linewidth=0.6, zorder=14)
         self.m.drawcountries(color='white', zorder=14)
