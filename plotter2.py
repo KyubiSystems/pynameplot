@@ -67,7 +67,7 @@ def drawMap(n, column):
     if caption:
         m.drawBase(caption, fontsize=8)
     else:
-        m.drawBase(n.caption, fontsize=8)
+        m.drawBase(m.caption, fontsize=8)
 
     # Check for solid colouring flag
     if solid:
@@ -224,15 +224,17 @@ elif indir:
 
     else:
         # draw maps for all timestamps and files in directory
-        for f in s.files:
+        allfiles = sorted(s.fs.getAll())
+
+        for f in allfiles:
             n = name.Name(f)
             for column in n.timestamps:
                 n.column = column
                 drawMap(n, column)
-        exit()
 
 
 else:
     raise ValueError('No input file or directory defined')
     exit
 
+print '*** Done!'

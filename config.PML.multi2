@@ -1,0 +1,3 @@
+indir = '/data/name/Python/NAME_data/PML_NAME_output'  # Input NAME directory
+station1 = -4.1931, 50.3189  # (Lon, Lat) tuple containing Station coordinates
+outdir = '/data/name/Python/testplot3'

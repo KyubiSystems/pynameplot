@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Grid job file for generation of NAME zone sum CSVs
+# Duncan Law-Green dlg@kyubi.co.uk
+
+#PBS -N Plotter
+#PBS -l walltime=01:00:00
+#PBS -l vmem=4gb
+#PBS -m bea
+#PBS -k oe
+#PBS -M jdblg1@le.ac.uk
+
+# ------------------------------------------
+# Set script input parameters
+CONFIGFILE=/data/name/Python/config.PML.multi2
+# ------------------------------------------
+
+# Execute the job code
+source /data/name/Python/gridsetup.sh;/data/name/Python/plotter2.py -c $CONFIGFILE

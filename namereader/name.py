@@ -49,7 +49,7 @@ class Name:
         self.filename = filename
 
         if not os.path.isfile(self.filename):
-            raise ValueError
+            exit("Cannot find name file: {}".format(self.filename))
 
         # Enable Shapely native C++ acceleration
         if speedups.available:
@@ -129,8 +129,6 @@ class Name:
             self.direction = 'Forwards'
         else:
             self.direction = 'Backwards'
-
-        self.caption = '{} {} {} {} start of release: {}'.format(self.runname, self.averaging, self.altitude, self.direction, self.release)
 
         # read CSV portion of NAME file into pandas DataFrame
         df = pd.read_csv(self.filename, header=31)

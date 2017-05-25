@@ -1,0 +1,3 @@
+infile = 'NAME_data/PML_NAME_output/low5dayPML_20150501.txt'  # Single input NAME file
+station1 = -4.1931, 50.3189  # (Lon, Lat) tuple containing Station coordinates
+outdir = 'testplot'

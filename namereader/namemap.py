@@ -67,20 +67,11 @@ class Map(object):
 
         self.outdir = ''
 
-        # get root of input NAME filename
-        base = os.path.basename(self.name.filename)
-        base = os.path.splitext(base)[0]
+        # Set default plot caption
+        self.getCaption()
 
-        # construct default output plot filename with time suffix
-        if self.column == 'total':
-            suffix = 'sum_day'
-        else:
-            a = arrow.get(self.column, 'DD/MM/YYYY HH:mm')
-            suffix = a.format('HHmm')
-            if self.name.direction == 'Forwards':
-                suffix = a.shift(hours=-3).format('HHmm')
-
-        self.filename = '{}_{}.png'.format(base, suffix)
+        # set default plot filename
+        self.getFilename()
 
         # set default projection to cylindrical
         self.projection = 'cyl'
@@ -88,8 +79,41 @@ class Map(object):
         # set default fixed scale normalisation for output plot
         self.setFixedScale()
 
+    def getCaption(self):
+        """
+        Set default plot caption
+        """
+
+        if self.column == 'total':
+            suffix = 'Sum'
+        else: 
+            a = arrow.get(self.column, 'DD/MM/YYYY HH:mm')
+            suffix = a.format('HHmm')
+            if self.name.direction == 'Forwards':
+                suffix = a.shift(hours=-3).format('HHmm')
+                
+        self.caption = '{} {} {} {} start of release: {} {}'.format(self.name.runname, self.name.averaging, self.name.altitude, self.name.direction, self.name.release[0:10], suffix)
+
+    def getFilename(self):
+        """
+        Set default plot filename
+        """
+        # get root of input NAME filename
+        base = os.path.basename(self.name.filename)
+        base = os.path.splitext(base)[0]
+
+        if self.column == 'total':
+            suffix = 'sum_day'
+        else: 
+            a = arrow.get(self.column, 'DD/MM/YYYY HH:mm')
+            suffix = a.format('HHmm')
+            if self.name.direction == 'Forwards':
+                suffix = a.shift(hours=-3).format('HHmm')
+
+        self.filename = '{}_{}.png'.format(base, suffix)
 
     def setFixedScale(self, conc=(5.e-9, 1.e-4)):
+
         """
         Set fixed scale normalisation manually.
 

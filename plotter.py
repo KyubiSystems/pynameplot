@@ -178,7 +178,7 @@ elif autoscale:
 if caption:
     m.drawBase(caption, fontsize=8)
 else:
-    m.drawBase(n.caption, fontsize=8)
+    m.drawBase(m.caption, fontsize=8)
 
 
 # Check for solid colouring flag
