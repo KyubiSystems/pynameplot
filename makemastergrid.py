@@ -37,13 +37,10 @@ parser.add_argument("-s", "--shapelist", help='File containing list of input sha
 parser.add_argument("-o", "--outfile", help='Output master grid file name', required=True)
 args = parser.parse_args()
 
+# ------------------------------------
+
 print '+++ Starting makemastergrid... +++'
 
-#namefile = 'PML_NAME_output/low5dayPML_20150501.txt'  # input NAME filename
-#shapelist = "europe_shapes.list"  # shapefile name/colour list
-#outfile = "PML.pickle2"  # output pickle
-
-# ------------------------------------
 # Read list of shapefiles, colours
 
 print "Reading shape list %s..." % args.shapelist
@@ -64,6 +61,11 @@ with open(args.shapelist, 'r') as shp:
 
 shortnames = [ util.shortname(f) for f in files ]
 pcnames = [ 'pc_' + s for s in shortnames ]
+
+# Get CRS from first shapefile
+s = gpd.read_file(files[0])
+
+print 'CRS found: ', s.crs
 
 # ------------------------------------
 # Read NAME file header for grid parameters
@@ -100,19 +102,11 @@ data = { 'Longitude': longitude, 'Latitude': latitude }
 df = pd.DataFrame(data)
 df = df[['Longitude', 'Latitude']]  # Set column order manually
 
-# Generate grid lat-long index for subsequent matching
-# print 'Generating Lat-Long index...',
-# df.set_index(['Longitude', 'Latitude'], drop=False, inplace=True)
-# print 'done.'
-
 # Generate polygon geometry column
 df['grid'] = [ Polygon(geom.gridsquare(xy + grid_size)) for xy in zip(df.Longitude, df.Latitude) ]
 
-# Set mapping coordinate for GeoDataFrame
-crs = {'init': u'epsg:4326'}
-
-# Create GeoDataFrame
-gd = gpd.GeoDataFrame(df, crs=crs, geometry=df['grid'])
+# Create GeoDataFrame using CRS from provided shapefiles
+gd = gpd.GeoDataFrame(df, crs=s.crs, geometry=df['grid'])
 
 print "Starting covering factor calculations..."
 
@@ -124,7 +118,7 @@ for f in files:
 
     cover = gpd.sjoin(gd, shp.data, how='inner', op='intersects')
 
-    cover[shp.shortname] = [geom.coverfactor(shp.proj_cu, s, shp.lat_min, shp.lat_max) for s in cover['grid']]
+    cover[shp.shortname] = [geom.coverfactor(shp.cu, s) for s in cover['grid']]
 
     c2 = cover[shp.shortname]
 

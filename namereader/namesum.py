@@ -94,7 +94,9 @@ class Sum(Name):
 
             # Load Sum object metadata from first Name file found
             self.runname = n.runname
+            self.release = n.release
             self.averaging = n.averaging
+            self.duration = n.duration
             self.altitude = n.altitude
             self.direction = n.direction
             self.lon_bounds = n.lon_bounds

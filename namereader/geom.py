@@ -18,27 +18,8 @@ import os
 from shapely.ops import transform, cascaded_union
 from shapely.geometry import Point, Polygon
 
-import pyproj
-
-from functools import partial
-
-
-def reproj(geom, lat1, lat2):
-    """
-    reproject input geometry as equal area
-    geom -- Shapely geometry
-    lat1 -- reference latitude 1
-    lat2 -- reference latitude 2
-    """
-
-    geom_proj = transform(
-        partial(pyproj.transform, pyproj.Proj(init='EPSG:4326'), pyproj.Proj(proj='aea', lat1=lat1, lat2=lat2)), geom
-    )    
-    return geom_proj
-
-
 # --------------------------------------
-def coverfactor(geom, square, lat_min, lat_max):
+def coverfactor(geom, square):
     """
     Calculate covering factor of ESRI shape over grid square.
     Value is float in range 0.0 -- 1.0
@@ -49,18 +30,13 @@ def coverfactor(geom, square, lat_min, lat_max):
     lat_max -- reference latitude 2
     """
 
-    # reproject grid square
-    square_proj = reproj(square, lat_min, lat_max)
-
     cf = 0.0
 
-    # loop over shapes in shapefile
-
-    # for g in geom:
-
-    inters = geom.intersection(square_proj)
+    # geometry of intersection between input shape and grid square
+    inters = geom.intersection(square)
         
-    cf += (inters.area/square_proj.area)
+    # ratio of areas is covering factor
+    cf += (inters.area/square.area)
     
     return cf
 

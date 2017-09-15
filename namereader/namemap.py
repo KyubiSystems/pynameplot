@@ -26,6 +26,7 @@ import arrow
 from shapely.ops import transform
 from shapely.geometry import Point, Polygon
 from descartes import PolygonPatch
+import geopandas as gpd
 
 import os
 
@@ -84,6 +85,11 @@ class Map(object):
         Set default plot caption
         """
 
+        if self.name.direction == 'Forwards':
+            release_date = self.name.release[0:10]
+        elif self.name.direction == 'Backwards':
+            release_date = self.name.endrelease[0:10]
+
         if self.column == 'total':
             suffix = 'Sum'
         else: 
@@ -92,7 +98,7 @@ class Map(object):
             if self.name.direction == 'Forwards':
                 suffix = a.shift(hours=-3).format('HHmm')
                 
-        self.caption = '{} {} {} {} start of release: {} {}'.format(self.name.runname, self.name.averaging, self.name.altitude, self.name.direction, self.name.release[0:10], suffix)
+        self.caption = '{} {} {} {} start of release: {} {}'.format(self.name.runname, self.name.averaging, self.name.altitude, self.name.direction, release_date, suffix)
 
     def getFilename(self):
         """
@@ -112,7 +118,7 @@ class Map(object):
 
         self.filename = '{}_{}.png'.format(base, suffix)
 
-    def setFixedScale(self, conc=(5.e-9, 1.e-4)):
+    def setFixedScale(self, conc=(5.e-9, 1.e-5)):
 
         """
         Set fixed scale normalisation manually.
@@ -201,7 +207,7 @@ class Map(object):
 
         # South Polar Stereographic
         elif self.projection == 'spstere':
-            self.m = Basemap(projection=self.projection, boundinglat=self.lat_range[0], lon_0=self.lon_range[0], resolution='l')
+            self.m = Basemap(projection=self.projection, boundinglat=self.lat_range[1], lon_0=self.lon_range[0], resolution='l')
 
         else:
             exit('Unsupported projection! Try cyl|npstere|spstere')
@@ -234,11 +240,11 @@ class Map(object):
             
             for poly in shape.geometry:
                 if poly.geom_type == 'Polygon':
-                    mpoly = transform(m, poly)
+                    mpoly = transform(self.m, poly)
                     self.patches.append(PolygonPatch(mpoly))
                 elif poly.geom_type == 'MultiPolygon':
                     for subpoly in poly:
-                        mpoly = transform(m, subpoly)
+                        mpoly = transform(self.m, subpoly)
                         self.patches.append(PolygonPatch(mpoly))
                     
     def zoneColour(self, colours):
@@ -257,7 +263,7 @@ class Map(object):
         pc.set_edgecolor('none')
         pc.set_alpha(0.5)
         pc.set_linewidth(0.5)
-        pc.set_zorder(4)
+        pc.set_zorder(20)
         
         sq = self.ax.add_collection(pc)
 
@@ -272,7 +278,7 @@ class Map(object):
         pc2.set_edgecolor(edgecolour)
         pc2.set_alpha(0.5)
         pc2.set_linewidth(0.5)
-        pc2.set_zorder(10)
+        pc2.set_zorder(25)
         
         sq2 = self.ax.add_collection(pc2)
 
@@ -310,7 +316,7 @@ class Map(object):
         cmap = matplotlib.colors.ListedColormap([color])
         norm = matplotlib.colors.LogNorm(vmin=0.99, vmax=1.0, clip=False)
 
-        self.m.pcolormesh(x, y, mesh3, norm=norm, cmap=cmap, zorder=zorder)
+        self.m.pcolormesh(x, y, mesh3, norm=norm, cmap=cmap, zorder=zorder, alpha=0.6)
 
 
     def drawMesh(self, column, zorder=6):
@@ -328,10 +334,16 @@ class Map(object):
         lats = mesh2.columns
 
         mesh2 = mesh2.transpose()
+ # DEBUGstart---
+        lons2, lats2 = np.meshgrid(lons, lats)
 
-        x,y = self.m(lons, lats)
+ #        x,y = self.m(lons.values, lats.values)
+ # DEBUGend---
+ #        x,y = self.m(lons, lats)
 
-        pc = self.m.pcolormesh(x, y, mesh2, cmap=self.colormap, norm=self.norm, zorder=zorder)
+ #       pc = self.m.pcolormesh(x, y, mesh2, cmap=self.colormap, norm=self.norm, zorder=zorder)
+        pc = self.m.pcolormesh(lons2, lats2, mesh2, latlon=True, cmap=self.colormap, norm=self.norm, zorder=zorder)
+
 
         if not self.solid:
             self.fig.colorbar(pc, label=r'Concentration (g s/m$^3$)', shrink=0.5)

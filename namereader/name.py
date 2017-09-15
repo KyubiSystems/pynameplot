@@ -23,10 +23,11 @@ from shapely import speedups
 from shapely.geometry import Point, Polygon
 
 import os
+import re
 
 # local NAME libraries
 from .header import loadheader
-from .geom import coverfactor, gridsquare, reproj
+from .geom import coverfactor, gridsquare
 from .shape import Shape
 
 
@@ -39,14 +40,18 @@ class Name:
     timestamps = []  
     header = {}  
 
-    def __init__(self, filename):
+    def __init__(self, filename, crs = None):
         """
         Initialise NAME object
 
         filename -- path to NAME file
+        crs -- coordinate reference system (defaults to EPSG:4326)
         """
 
         self.filename = filename
+        if crs is None:
+            crs = {'init': 'EPSG:4326'}
+        self.crs = crs
 
         if not os.path.isfile(self.filename):
             exit("Cannot find name file: {}".format(self.filename))
@@ -79,6 +84,7 @@ class Name:
 
         self.grid_size = (delta_lon, delta_lat)
 
+        # Set lat/lon gridline spacing according to grid size
         if mlon>60.0:
             steplon=20
         elif mlon>30.0:
@@ -93,24 +99,40 @@ class Name:
         else:
             steplat=5
 
-        self.lon_grid=np.arange(lon_0, lon_1, steplon).tolist()
-        self.lat_grid=np.arange(lat_0, lat_1, steplat).tolist()
+        # Set lat/lon gridline minima to rounded values depending on scale
+        lon_grid_min = int(lon_0) - int(lon_0) % steplon
+        lat_grid_min = int(lat_0) - int(lat_0) % steplat
+
+        # Store arrays for lat/lon gridline positions
+        self.lon_grid=np.arange(lon_grid_min, lon_1, steplon).tolist()
+        self.lat_grid=np.arange(lat_grid_min, lat_1, steplat).tolist()
 
         # Store header parameters as member variables
         self.runname = self.header['Run name']
         self.release = self.header['Start of release']
         self.endrelease = self.header['End of release']
 
+        # Get field header values
         fields = pd.read_csv(self.filename, header=19, nrows=14)
         fields.drop(fields.columns[[0,1,2,3]], axis=1, inplace=True)
+
+        # Store averaging time 
         field1 = fields[fields.columns[[0]]]
         self.ave = field1[6::1].values[0][0].strip()
-        if self.ave.startswith('5day'):
-            self.averaging = '5 day'
-        elif self.ave.startswith('1day'):
-            self.averaging = '1 day'
+
+        l = re.search('(\d+)day\s+(\d+)hr', self.ave)
+        if int(l.group(2)) == 0:
+            self.averaging = '{} day'.format(int(l.group(1)))
         else:
-            self.averaging = ''
+            self.averaging = '{} day {} hr'.format(int(l.group(1)), int(l.group(2)))
+
+        # Store run duration time
+        dur = self.header['Run duration']
+        m = re.search('(\d+)day\s+(\d+)hr', dur)
+        if int(m.group(2)) == 0:
+            self.duration = '{} day'.format(int(m.group(1)))
+        else:
+            self.duration = '{} day {} hr'.format(int(m.group(1)), int(m.group(2)))
 
         a = arrow.get(self.filename, 'YYYYMMDD')
         self.year = a.format('YYYY')
@@ -121,7 +143,15 @@ class Name:
         if 'Z = 50.0' in self.alt:
             self.altitude = '0-100m'
         elif 'Z = 500.0' in self.alt:
+            self.altitude = '0-1000m'
+        elif 'Z = 550.0' in self.alt:
             self.altitude = '100-1000m'
+        elif 'Z = 2500.0' in self.alt:
+            self.altitude = '0-5000m'
+        elif 'Z = 5500.0' in self.alt:
+            self.altitude = '1-10km'
+        elif 'Z = 7000.0' in self.alt:
+            self.altitude = '4-10km'
         else:
             self.altitude = ''
 
@@ -157,13 +187,13 @@ class Name:
         df = df.apply(lambda x: pd.to_numeric(x, errors='ignore'))
     
         # Set mapping coordinate for GeoDataFrame
-        crs = {'init': 'epsg:4326'}
+        # crs = {'init': 'epsg:4326'}
     
         # Generate Shapely Polygons for grid squares
         df['grid'] = [Polygon(gridsquare(xy + self.grid_size)) for xy in zip(df.Longitude, df.Latitude)]
     
         # Create GeoDataFrame with point and grid geometry columns
-        self.data = gpd.GeoDataFrame(df, crs=crs, geometry=df['grid'])
+        self.data = gpd.GeoDataFrame(df, crs=self.crs, geometry=df['grid'])
 
         # Set lat/lon indices on data
         self.data.set_index(["Longitude", "Latitude"], inplace=True)
@@ -234,8 +264,8 @@ class Name:
 
         shapefile -- Path to ESRI shape file
         """
-
+        # create shape object
         shape = Shape(shapefile)
 
-        # calculate covering factor column
-        self.data[shape.shortname] = [coverfactor(shape.proj_geo, s, shape.lat_min, shape.lat_max) for s in self.data['grid']]
+        # calculate covering factors of shape cascaded union over grid squares
+        self.data[shape.shortname] = [coverfactor(shape.cu, s) for s in self.data['grid']]

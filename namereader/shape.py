@@ -18,7 +18,6 @@ import os
 
 from shapely.ops import cascaded_union
 
-from .geom import reproj
 from .util import shortname
 
 
@@ -52,6 +51,3 @@ class Shape(object):
         self.lat_min = self.geo.bounds['miny'].min()
         self.lat_max = self.geo.bounds['maxy'].max()
 
-        # reprojected geometry
-        self.proj_geo = [reproj(g, self.lat_min, self.lat_max) for g in self.geo]
-        self.proj_cu = reproj(self.cu, self.lat_min, self.lat_max)
