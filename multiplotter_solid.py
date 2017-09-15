@@ -2,18 +2,23 @@
 
 # Author: Duncan Law-Green (dlg@kyubi.co.uk)
 # Copyright 2017 Kyubi Systems
+# Licensed under the Apache License, Version 2.0 (see LICENSE)
+# -------------------------------------------------------------
 # 
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
+# MULTIPLOTTER_SOLID
+# 
+# Plot multiple NAME datasets on geographical map, showing areas
+# with concentrations >1e-9 as solid colour 'footprints'. Reads
+# configuration file to set input data paths, plot extent, 
+# normalisation, colormap and caption. Save output to PNG file.
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Requires supporting libraries in namereader/.
+# 
+# EXAMPLES:
 #
-# Unless required by applicable law or in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# multiplotter_solid.py --help
+# multiplotter_solid.py -c [config file]
+#
 
 import argparse
 import matplotlib
