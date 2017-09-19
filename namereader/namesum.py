@@ -49,6 +49,15 @@ class Sum(Name):
             self.files = sorted(self.fs.between(start, stop))
             self.__addFiles(self.files)
 
+      def sumDay(self, day):
+            """
+            Add all NAME files for given day 
+            day -- date in YYYYMMDD format
+            """
+
+            self.files = sorted(self.fs.getDay(day))
+            self.__addFiles(self.files)
+            
       def sumWeek(self, w):
             """
             Add NAME files for given week number

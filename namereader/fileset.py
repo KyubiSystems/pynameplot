@@ -79,6 +79,21 @@ class Fileset:
                         result.append(f)
             return result
 
+      def getDay(self, day):
+            """
+            Return NAME files for given day
+
+            day --- date, YYYYMMDD format
+            """
+            a = arrow.get(day, 'YYYYMMDD')
+            result = []
+            for f in self.files:
+                  g = shortname(f)
+                  d = arrow.get(g, 'YYYYMMDD')
+                  if (d == a):
+                        result.append(f)
+            return result
+
       def getWeek(self, a):
             """
             Return week number for given Arrow object

@@ -129,11 +129,13 @@ class Name:
         else:
             self.duration = '{} day {} hr'.format(int(m.group(1)), int(m.group(2)))
 
+        # Store date information from input filename
         a = arrow.get(self.filename, 'YYYYMMDD')
         self.year = a.format('YYYY')
         self.month = a.format('MM').zfill(2)
         self.day = a.format('DD').zfill(2)
-            
+
+        # Get altitude range information from column header            
         self.alt = field1[13::1].values[0][0].strip()
         if 'Z = 50.0' in self.alt:
             self.altitude = '0-100m'
@@ -150,6 +152,7 @@ class Name:
         else:
             self.altitude = ''
 
+        # Determine whether simulation run is forwards or backwards in time
         if self.endrelease > self.release:
             self.direction = 'Forwards'
         else:
@@ -166,12 +169,23 @@ class Name:
         collist = c[0]
     
         # Set leader column names
-        collist[1:4] = ['X-Index', 'Y-Index', 'Longitude', 'Latitude']
+        coordcols = ['X-Index', 'Y-Index', 'Longitude', 'Latitude']
+        collist[1:4] = coordcols
         collist = [x.strip() for x in collist]
     
         # Get observation timestamp strings
         self.timestamps = collist[5::]
-    
+
+        # If run is backwards, modify timestamps to match self.release header
+        if self.direction == 'Backwards':
+            col0_time = arrow.get(self.timestamps[0], 'DD/MM/YYYY HH:mm')
+            start_time = arrow.get(self.release, 'DD/MM/YYYY HH:mm')
+            delta_time = start_time - col0_time
+            
+            newstamps = map(lambda t: (arrow.get(t, 'DD/MM/YYYY HH:mm')+delta_time).format('DD/MM/YYYY HH:mm UTC'), self.timestamps)
+            self.timestamps = newstamps
+            collist = [''] + coordcols + newstamps
+
         # Apply labels to DataFrame
         df.columns = collist[1::]
     
