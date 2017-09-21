@@ -99,6 +99,7 @@ class Sum(Name):
             # Load Sum object metadata from first Name file found
             self.runname = n.runname
             self.release = n.release
+            self.endrelease = n.endrelease
             self.averaging = n.averaging
             self.duration = n.duration
             self.altitude = n.altitude

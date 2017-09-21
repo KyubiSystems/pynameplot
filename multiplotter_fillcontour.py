@@ -296,7 +296,7 @@ elif indir:
         # draw summed map for month
         s.sumMonth(month)
         if not caption:
-            caption = "{} {} {} {}: {} {} sum". format(s.runname, s.averaging, s.altitude, s.direction, s.year, calendar.month_name(month))
+            caption = "{} {} {} {}: {} {} sum". format(s.runname, s.averaging, s.altitude, s.direction, s.year, calendar.month_name[int(month)])
         if not outfile:
             outfile = "{}_{}{}_monthly.png".format(s.runname, s.year, month.zfill(2))
         map_obj = drawMap(s, 'total')
