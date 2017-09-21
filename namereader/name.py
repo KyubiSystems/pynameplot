@@ -176,10 +176,10 @@ class Name:
         # Get observation timestamp strings
         self.timestamps = collist[5::]
 
-        # If run is backwards, modify timestamps to match self.release header
+        # If run is backwards, modify timestamps to match self.ENDrelease header (per MP request)
         if self.direction == 'Backwards':
             col0_time = arrow.get(self.timestamps[0], 'DD/MM/YYYY HH:mm')
-            start_time = arrow.get(self.release, 'DD/MM/YYYY HH:mm')
+            start_time = arrow.get(self.endrelease, 'DD/MM/YYYY HH:mm')
             delta_time = start_time - col0_time
             
             newstamps = map(lambda t: (arrow.get(t, 'DD/MM/YYYY HH:mm')+delta_time).format('DD/MM/YYYY HH:mm UTC'), self.timestamps)

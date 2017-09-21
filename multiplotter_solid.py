@@ -205,6 +205,7 @@ color1 = config.get('color1')   # Solid colour for dataset 1
 
 # map labelling
 caption = config.get('caption')  # Primary caption for output plot
+runname = config.get('runname')  # Replace runname part of caption only
 
 # output directory
 outdir = config.get('outdir')  # Output directory for plot files, create if does not exist
