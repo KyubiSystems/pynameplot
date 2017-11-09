@@ -43,9 +43,9 @@ Repeat for subsequent files or directories
 Save output to disk
 """
 
-def drawMap(n, column):
+def drawMap(n, column, runname=''):
     # Create Map object from NAME data
-    m = namemap.Map(n, column=column)
+    m = namemap.Map(n, column=column, runname=runname)
     m.runnames = []
     
     # Set projection if defined, otherwise cylindrical
@@ -233,7 +233,7 @@ if infile:
         # draw map for single timestamp
         column = timestamp
         n.column = column
-        map_obj = drawMap(n, column)
+        map_obj = drawMap(n, column, runname)
         map_obj = addSettoMap(map_obj, n, 1, column)        
 
         for i in xrange(2,7):
@@ -247,7 +247,7 @@ if infile:
         # draw maps for all timestamps in file
         for column in n.timestamps:
             n.column = column
-            map_obj = drawMap(n, column)
+            map_obj = drawMap(n, column, runname)
             map_obj = addSettoMap(map_obj, n, 1, column)        
 
             for i in xrange(2,7):
@@ -263,9 +263,9 @@ elif indir:
         # draw summed map for day
         s.sumDay(day)
         if not caption:
-            caption = "{} {} {} {}: {}{}{} day sum".format(s.runname, s.averaging, s.altitude, s.direction, s.year, calendar.month_name[int(s.month)], s.day)
+            caption = "{} {} {} {}: {}{}{} day sum".format(runname or s.runname, s.averaging, s.altitude, s.direction, s.year, calendar.month_name[int(s.month)], s.day)
         if not outfile:
-            outfile = "{}_{}{}{}_daily.png".format(s.runname, s.year, s.month, s.day)
+            outfile = "{}_{}{}{}_daily.png".format(runname or s.runname, s.year, s.month, s.day)
         map_obj = drawMap(s, 'total')
         map_obj = addSettoMap(map_obj, s, 1, 'total')
 
@@ -280,9 +280,9 @@ elif indir:
         # draw summed map for week
         s.sumWeek(week)
         if not caption:
-            caption = "{} {} {} {}: {} week {} sum". format(s.runname, s.averaging, s.altitude, s.direction, s.year, week)
+            caption = "{} {} {} {}: {} week {} sum". format(runname or s.runname, s.averaging, s.altitude, s.direction, s.year, week)
         if not outfile:
-            outfile = "{}_{}{}_weekly.png".format(s.runnname, s.year, week.zfill(2))
+            outfile = "{}_{}{}_weekly.png".format(runname or s.runnname, s.year, week.zfill(2))
         map_obj = drawMap(s, 'total')
         map_obj = addSettoMap(map_obj, s, 1, 'total')
 
@@ -297,9 +297,9 @@ elif indir:
         # draw summed map for month
         s.sumMonth(month)
         if not caption:
-            caption = "{} {} {} {}: {} {} sum". format(s.runname, s.averaging, s.altitude, s.direction, s.year, calendar.month_name(int(month)))
+            caption = "{} {} {} {}: {} {} sum". format(runname or s.runname, s.averaging, s.altitude, s.direction, s.year, calendar.month_name(int(month)))
         if not outfile:
-            outfile = "{}_{}{}_monthly.png".format(s.runname, s.year, month.zfill(2))
+            outfile = "{}_{}{}_monthly.png".format(runname or s.runname, s.year, month.zfill(2))
         map_obj = drawMap(s, 'total')
         map_obj = addSettoMap(map_obj, s, 1, 'total')
 
@@ -314,9 +314,9 @@ elif indir:
         # draw summed map for year
         s.sumYear(year)
         if not caption:
-            caption = "{} {} {} {}: {} year sum". format(s.runname, s.averaging, s.altitude, s.direction, year)
+            caption = "{} {} {} {}: {} year sum". format(runname or s.runname, s.averaging, s.altitude, s.direction, year)
         if not outfile:
-            outfile = "{}_{}_yearly.png".format(s.runname, year)
+            outfile = "{}_{}_yearly.png".format(runname or s.runname, year)
         map_obj = drawMap(s, 'total')
         map_obj = addSettoMap(map_obj, s, 1, 'total')
 
@@ -351,7 +351,7 @@ elif indir:
             # Iterate over timestamps in base file and draw base map
             for column in n.timestamps:
                 n.column = column
-                map_obj = drawMap(n, column)
+                map_obj = drawMap(n, column, runname)
                 map_obj = addSettoMap(map_obj, n, 1, column)
 
                 # iterate over input directories 2-6

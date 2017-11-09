@@ -44,7 +44,7 @@ class Map(object):
 
     conc = []
 
-    def __init__(self, name, column='total'):
+    def __init__(self, name, column='total', runname=''):
         """
         Initialise Map object.
 
@@ -57,6 +57,7 @@ class Map(object):
         
         self.name = name
         self.column = column
+        self.runname = runname
         self.fig, self.ax = plt.subplots()
         self.ax.set_aspect('equal')
         self.solid = False
@@ -93,7 +94,7 @@ class Map(object):
             if self.name.direction == 'Forwards':
                 suffix = a.shift(hours=-3).format('HHmm')
                 
-        self.caption = '{} {} {} {} start of release: {} {}'.format(self.name.runname, self.name.averaging, self.name.altitude, self.name.direction, release_date, suffix)
+        self.caption = '{} {} {} {} start of release: {} {}'.format(self.runname or self.name.runname, self.name.averaging, self.name.altitude, self.name.direction, release_date, suffix)
 
     def getFilename(self):
         """

@@ -158,6 +158,7 @@ day:         Plot summed data for this day
 week:        Plot summed data for this week (ISO-8601 week number)
 month:       Plot summed data for this month
 year:        Plot summed data for this year
+sumall:      Set flag=True to sum all files in input directory
 
 projection:  Map projection, default is 'cyl' (Cylindrical)
 lon_bounds:  (Long_min, Long_max) tuple: Longitude bounds of plot
@@ -174,6 +175,7 @@ solid:       Set flag=True for solid region plotting
 color1:      Name of solid colour for dataset 1 if solid flag set
 
 caption:     Override default plot caption and use this text string
+
 
 shapelist:   Text file containing list of ESRI shapefiles
 shapelines:  Set flag=True to plot boundary lines for shapefiles
@@ -208,6 +210,7 @@ day = config.get('day')   # Plot data summed for given day
 week = config.get('week')   # Plot data summed for given week
 month = config.get('month')   # Plot data summed for given month
 year = config.get('year')    # Plot data summed for given year
+sumall = config.get('sumall') # Set flag to sum all data in directory
 
 # map geometry
 projection = config.get('projection')  # Map projection, default is 'cyl' (Cylindrical)
@@ -227,6 +230,7 @@ color1 = config.get('color1')   # Solid colour for dataset 1
 
 # map labelling
 caption = config.get('caption')  # Primary caption for output plot
+runname = config.get('runname')  # Replace runname part of caption only #Marios added 24/10/2017
 
 # shape overlays
 shapelist = config.get('shapelist') # List of shapefiles and colours to plot
@@ -296,6 +300,15 @@ elif indir:
             caption = "{} {} {} {}: {} year sum". format(s.runname, s.averaging, s.altitude, s.direction, year)
         if not outfile:
             outfile = "{}_{}_yearly.png".format(s.runname, year)
+        drawMap(s, column)
+
+    elif sumall:
+        # draw summed map for entire directory
+        s.sumAll()
+        if not caption:
+            caption = "{} {} {} {}: Summed".format(s.runname, s.averaging, s.altitude, s.direction)
+        if not outfile:
+            outfile = "{}_summed_all.png".format(s.runname)
         drawMap(s, column)
 
     else:

@@ -16,32 +16,42 @@
 import geopandas as gpd
 import os
 
-from geom import reproj
+from shapely.ops import cascaded_union
+
+from .geom import reproj
+from .util import shortname
+
 
 class Shape(object):
-    'Base class for shape derived from ESRI shapefile'
+    """
+    Class for Shapely geometry derived from ESRI shapefile
+    """
 
     shapefile = ""
     shortname = ""
 
-    # Initialise shape object from ESRI file at 'filename'
     def __init__(self, shapefile):
+        """
+        Initialise shape object from ESRI file
+        filename -- path to ESRI shapefile
+        """
+
         self.shapefile = shapefile
         
         if not os.path.isfile(self.shapefile):
-            exit('Input shapefile ' + self.shapefile + ' does not exist')
+            raise ValueError
 
-        self.shortname = self.shorten(self.shapefile)
+        self.shortname = shortname(self.shapefile)
 
         self.data = gpd.GeoDataFrame.from_file(self.shapefile)
 
         # Get shape latitude extent
         self.geo = self.data.geometry
+        self.cu = cascaded_union(self.geo)
+        self.bounds = self.cu.bounds
         self.lat_min = self.geo.bounds['miny'].min()
         self.lat_max = self.geo.bounds['maxy'].max()
 
         # reprojected geometry
-        self.proj_geo = [ reproj(g, self.lat_min, self.lat_max) for g in self.geo ]
-        
-    def shorten(self, filename):
-        return os.path.splitext(os.path.basename(filename))[0]
+        self.proj_geo = [reproj(g, self.lat_min, self.lat_max) for g in self.geo]
+        self.proj_cu = reproj(self.cu, self.lat_min, self.lat_max)
