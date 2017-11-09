@@ -114,20 +114,11 @@ class Name:
         # Store averaging time 
         field1 = fields[fields.columns[[0]]]
         self.ave = field1[6::1].values[0][0].strip()
-
-        l = re.search('(\d+)day\s+(\d+)hr', self.ave)
-        if int(l.group(2)) == 0:
-            self.averaging = '{} day'.format(int(l.group(1)))
-        else:
-            self.averaging = '{} day {} hr'.format(int(l.group(1)), int(l.group(2)))
+        self.averaging = self.ave.replace(' integral','').replace('day ','days ').replace(' 0hr','').replace(' 0min','')
 
         # Store run duration time
         dur = self.header['Run duration']
-        m = re.search('(\d+)day\s+(\d+)hr', dur)
-        if int(m.group(2)) == 0:
-            self.duration = '{} day'.format(int(m.group(1)))
-        else:
-            self.duration = '{} day {} hr'.format(int(m.group(1)), int(m.group(2)))
+        self.duration = dur.replace('day ','days ').replace(' 0hr','').replace(' 0min','')
 
         # Store date information from input filename
         a = arrow.get(self.filename, 'YYYYMMDD')
