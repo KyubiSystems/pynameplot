@@ -143,12 +143,6 @@ class Name:
         else:
             self.altitude = ''
 
-        # Determine whether simulation run is forwards or backwards in time
-        if self.endrelease > self.release:
-            self.direction = 'Forwards'
-        else:
-            self.direction = 'Backwards'
-
         # read CSV portion of NAME file into pandas DataFrame
         df = pd.read_csv(self.filename, header=31)
 
@@ -166,6 +160,12 @@ class Name:
     
         # Get observation timestamp strings
         self.timestamps = collist[5::]
+
+        # Determine whether simulation run is forwards or backwards in time
+        if arrow.get(self.endrelease, 'DD/MM/YYYY HH:mm') > arrow.get(self.release, 'DD/MM/YYYY HH:mm'):
+            self.direction = 'Forwards'
+        else:
+            self.direction = 'Backwards'
 
         # If run is backwards, modify timestamps to match self.ENDrelease header (per MP request)
         if self.direction == 'Backwards':
