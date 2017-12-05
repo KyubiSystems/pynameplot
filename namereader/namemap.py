@@ -153,8 +153,9 @@ class Map(object):
         if not (len(lon_range) == 2 and len(lat_range) == 2):
             raise ValueError('Invalid longitude/latitude range')
 
-        self.lon_range = lon_range
-        self.lat_range = lat_range
+        #self.lon_range = lon_range
+        self.lon_range = [float(b) for b in lon_range]
+        self.lat_range = [float(b) for b in lat_range]
 
     def setAxes(self, lon_axis, lat_axis):
         """
@@ -167,8 +168,8 @@ class Map(object):
         if not (isinstance(lon_axis, list) and isinstance(lat_axis, list)):
             raise ValueError('Invalid longitude/latitude axis array')
 
-        self.lon_axis = lon_axis
-        self.lat_axis = lat_axis
+        self.lon_axis = [float(b) for b in lon_axis]
+        self.lat_axis = [float(b) for b in lat_axis]
 
     def setProjection(self, projection):
         """
@@ -216,7 +217,6 @@ class Map(object):
         self.m.drawmeridians(self.lon_axis, linewidth=0.3, color='white', labels=[1, 0, 0, 1], zorder=14, fontsize=5)
 
         self.ax.set_title(caption, fontsize=fontsize)
-
     # --------------------------------------------------------
     def zoneLoad(self, files):
         """
@@ -263,7 +263,7 @@ class Map(object):
         
         sq = self.ax.add_collection(pc)
 
-    def zoneLines(self, edgecolour='red'):        
+    def zoneLines(self, edgecolour='black'):        #was 'red'
         """
         Set boundary colour for defined ESRI shapes
         edgecolour -- HTML colour name for boundary
@@ -272,9 +272,9 @@ class Map(object):
         pc2 = PatchCollection(self.patches, match_original=True)
         pc2.set_facecolor('none')
         pc2.set_edgecolor(edgecolour)
-        pc2.set_alpha(0.5)
+        pc2.set_alpha(0.5) #5.0
         pc2.set_linewidth(0.5)
-        pc2.set_zorder(25)
+        pc2.set_zorder(25) # 500
         
         sq2 = self.ax.add_collection(pc2)
 
@@ -358,7 +358,7 @@ class Map(object):
         lat -- station latitude
         """
         x, y = self.m(lon, lat)
-        self.m.plot(x, y, 'kx', markersize=4, zorder=15)
+        self.m.plot(x, y, 'kx', markersize=4, zorder=15, label = 'Pinggu')
 
     def saveFile(self, filename=None):
         """

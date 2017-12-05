@@ -129,17 +129,17 @@ class Name:
         # Get altitude range information from column header            
         self.alt = field1[13::1].values[0][0].strip()
         if 'Z = 50.0' in self.alt:
-            self.altitude = '0-100m'
+            self.altitude = '(0-100m)'
         elif 'Z = 500.0' in self.alt:
-            self.altitude = '0-1000m'
+            self.altitude = '(0-1000m)'
         elif 'Z = 550.0' in self.alt:
-            self.altitude = '100-1000m'
+            self.altitude = '(100-1000m)'
         elif 'Z = 2500.0' in self.alt:
-            self.altitude = '0-5000m'
+            self.altitude = '(0-5000m)'
         elif 'Z = 5500.0' in self.alt:
-            self.altitude = '1-10km'
+            self.altitude = '(1-10km)'
         elif 'Z = 7000.0' in self.alt:
-            self.altitude = '4-10km'
+            self.altitude = '(4-10km)'
         else:
             self.altitude = ''
 

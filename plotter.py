@@ -20,6 +20,7 @@
 # 
 
 import argparse
+import matplotlib
 import os
 import calendar
 import textwrap
@@ -125,7 +126,6 @@ def drawMap(n, column):
         if shapecolors:
             print 'Plotting zone colours...'
             m.zoneColour(colors)
-
 
     # If output directory does not exist, create it
     if outdir:
