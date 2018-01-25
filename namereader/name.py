@@ -102,6 +102,9 @@ class Name:
         self.lon_grid=np.arange(lon_grid_min, lon_1, steplon).tolist()
         self.lat_grid=np.arange(lat_grid_min, lat_1, steplat).tolist()
 
+        # LONGFIX: Normalise lon gridlines in range (-180, 180)
+        self.lon_grid=np.mod((self.lon_grid+180.0), 360) - 180.0
+
         # Store header parameters as member variables
         self.runname = self.header['Run name']
         self.release = self.header['Start of release']
@@ -188,6 +191,9 @@ class Name:
     
         # Set mapping coordinate for GeoDataFrame
         # crs = {'init': 'epsg:4326'}
+
+        # LONGFIX: Normalise longitude in range (-180, +180)
+        df['Longitude'] = np.mod((df['Longitude']+180.0), 360) - 180.0
     
         # Generate Shapely Polygons for grid squares
         df['grid'] = [Polygon(gridsquare(xy + self.grid_size)) for xy in zip(df.Longitude, df.Latitude)]
