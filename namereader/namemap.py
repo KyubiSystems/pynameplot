@@ -330,19 +330,49 @@ class Map(object):
         lats = mesh2.columns
 
         mesh2 = mesh2.transpose()
- # DEBUGstart---
+
         lons2, lats2 = np.meshgrid(lons, lats)
 
- #        x,y = self.m(lons.values, lats.values)
- # DEBUGend---
- #        x,y = self.m(lons, lats)
+        # -- DEBUG --
+        # Check for data straddling longitude 180 meridian
+        # Split mesh into two subplots
 
- #       pc = self.m.pcolormesh(x, y, mesh2, cmap=self.colormap, norm=self.norm, zorder=zorder)
-        pc = self.m.pcolormesh(lons2, lats2, mesh2, latlon=True, cmap=self.colormap, norm=self.norm, zorder=zorder)
+        lonsA = [x <= 180 for x in lons]
+        if np.any(lonsA):
+            segE = mesh2.iloc[:,lonsA]
+            lonsE = segE.columns
+            latsE = segE.index.get_level_values('Latitude')
+            lonsE2, latsE2 = np.meshgrid(lonsE, latsE)
+            print 'Plotting segE...'
+            try:
+                pc1 = self.m.pcolormesh(lonsE2, latsE2, segE, latlon=True, cmap=self.colormap, norm=self.norm, zorder=zorder)
+            except IndexError:
+                pass
 
+            segW = mesh2.iloc[:,[not a for a in lonsA]]
+            lonsW = segW.columns
+            latsW = segW.index.get_level_values('Latitude')
+            lonsW2, latsW2 = np.meshgrid(lonsW, latsW)
+#            print lonsW2
+            print 'Plotting segW...'
+            try:
+                pc2 = self.m.pcolormesh(lonsW2, latsW2, segW, latlon=True, cmap=self.colormap, norm=self.norm, zorder=30)
+            except IndexError:
+                pass
 
-        if not self.solid:
-            self.fig.colorbar(pc, label=r'Concentration (g s/m$^3$)', shrink=0.5)
+            if not self.solid:
+                self.fig.colorbar(pc2, label=r'Concentration (g s/m$^3$)', shrink=0.5)
+            
+        # -- END DEBUG --
+
+        else: 
+
+            # Plotting entire input grid
+#            print lons2
+            pc = self.m.pcolormesh(lons2, lats2, mesh2, latlon=True, cmap=self.colormap, norm=self.norm, zorder=zorder)
+            
+            if not self.solid:
+                self.fig.colorbar(pc, label=r'Concentration (g s/m$^3$)', shrink=0.5)
 
     # --------------------------------------------------------
     def addTimestamp(self):
