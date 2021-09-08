@@ -77,6 +77,3 @@ optional arguments:
 -w WEEK, --week WEEK  			Select NAME files from ISO week number
 -m MONTH, --month MONTH                 Select NAME files from Month number
 -y YEAR, --year YEAR  			Select NAME files from Year
-
-
-# Jon added a comment
